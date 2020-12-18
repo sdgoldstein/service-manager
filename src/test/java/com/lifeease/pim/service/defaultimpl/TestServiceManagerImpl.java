@@ -239,7 +239,7 @@ public class TestServiceManagerImpl extends TestCase
 
         try
         {
-            this.serviceManagerToTest.defineService(goodServiceName, null);
+            this.serviceManagerToTest.defineService(goodServiceName, (Class)null);
             fail("Should throw IllegalArgumentExcepotion");
         }
         catch (IllegalArgumentException exception)

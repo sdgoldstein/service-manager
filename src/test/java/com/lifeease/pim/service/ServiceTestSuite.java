@@ -1,7 +1,7 @@
 package com.lifeease.pim.service;
 
 import com.lifeease.pim.service.defaultimpl.TestServiceManagerImpl;
-import com.lifeease.pim.service.simple.TestSimpleServiceProvider;
+import com.lifeease.pim.service.providers.TestSingletonServiceProvider;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -11,7 +11,7 @@ import org.junit.runners.Suite;
                       TestMapConfiguration.class, TestServiceException.class,
                       TestServiceManagerFactory.class,
                       TestServiceNotAvailableException.class,
-                      TestSimpleServiceProvider.class })
+                      TestSingletonServiceProvider.class })
 public class ServiceTestSuite
 {
 

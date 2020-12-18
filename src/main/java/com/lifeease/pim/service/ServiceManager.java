@@ -17,7 +17,7 @@ public interface ServiceManager
      * @throws ServiceNotAvailableException
      *             if the specified service does not exist
      */
-    public Service getService(String name) throws ServiceNotAvailableException;
+    public Service getService(String name) throws ServiceNotAvailableException, ServiceException;
 
     /**
      * Determine if a service with the specified name is available
@@ -63,6 +63,21 @@ public interface ServiceManager
                                  Class<? extends ServiceProvider> serviceClass,
                                  Configuration configuration)
         throws ServiceException;
+
+    /**
+     * Define a service
+     *
+     * @param name
+     *            the name of the defined service
+     * @param serviceProvider
+     *            the provider of the service
+     * @return the defined service, initiated and started FIX ME - Is this
+     *         correct?
+     * @throws ServiceException
+     *             if a failure occurs initializing the service
+     */
+    public void defineService(String name, ServiceProvider serviceProvider)
+            throws ServiceException;
 
     /**
      * Shutdown the ServiceManager and all associated services

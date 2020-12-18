@@ -31,19 +31,39 @@ public class ServiceManagerImpl implements ServiceManager
     private static final Map<String, ServiceController> CONTROLLERS_FOR_ACTIVE_SERVICES = new HashMap<String, ServiceController>();
     private static final Map<String, ServiceDefinition> SERVICE_DEFINITIONS = new HashMap<String, ServiceDefinition>();
 
-    public Service getService(String name)
+    public Service getService(String name) throws ServiceException
     {
         if (name == null)
         {
             throw new IllegalArgumentException("name cannot be null.");
         }
 
-        if (!CONTROLLERS_FOR_ACTIVE_SERVICES.containsKey(name))
+        if (!SERVICE_DEFINITIONS.containsKey(name))
         {
             throw new ServiceNotAvailableException(name);
         }
 
-        return CONTROLLERS_FOR_ACTIVE_SERVICES.get(name).getService();
+        ServiceController serviceLiason;
+
+        // Check if the service is already active FIXME - This means that all services are singletons.  shouldn't be
+        if (CONTROLLERS_FOR_ACTIVE_SERVICES.containsKey(name))
+        {
+            serviceLiason = CONTROLLERS_FOR_ACTIVE_SERVICES.get(name);
+        }
+        else
+        {
+            // Create and start it (NOT THREAD SAFE FIXME)
+            ServiceDefinition serviceDefinition = SERVICE_DEFINITIONS.get(name);
+
+            Configuration serviceConfiguration = serviceDefinition.getServiceConfiguration();
+            serviceLiason = serviceDefinition.getServiceLiason();
+
+            serviceLiason.initService(serviceConfiguration);
+            serviceLiason.startService();
+            CONTROLLERS_FOR_ACTIVE_SERVICES.put(name, serviceLiason);
+        }
+
+        return serviceLiason.getService();
     }
 
     public boolean isServiceAvailable(String name)
@@ -91,45 +111,35 @@ public class ServiceManagerImpl implements ServiceManager
             throw new IllegalStateException(errorMessage.toString());
         }
 
-        ServiceDefinition serviceDefinition = new ServiceDefinition(serviceProviderClass,
+        ServiceDefinition serviceDefinition = new ServiceDefinitionByClass(serviceProviderClass,
                                                                     configuration);
         SERVICE_DEFINITIONS.put(name, serviceDefinition);
-
-        ServiceController serviceLiason = getServiceLiason(serviceProviderClass);
-        CONTROLLERS_FOR_ACTIVE_SERVICES.put(name, serviceLiason);
-        serviceLiason.initService(configuration);
-        serviceLiason.startService();
-        CONTROLLERS_FOR_ACTIVE_SERVICES.put(name, serviceLiason);
     }
 
-    private ServiceController getServiceLiason(Class<? extends ServiceProvider> serviceProviderClass)
-        throws ServiceException
+    @Override
+    public void defineService(String name, ServiceProvider serviceProvider) throws ServiceException
     {
-        ServiceController serviceLiasonToReturn = null;
-
-        try
+        if (name == null)
         {
-            ServiceProvider serviceProvider = serviceProviderClass.newInstance();
-            serviceLiasonToReturn = serviceProvider.createService();
-        }
-        catch (IllegalAccessException exception)
-        {
-            StringBuffer errorMessage = new StringBuffer("Service provider class, ");
-            errorMessage.append(serviceProviderClass.getName());
-            errorMessage.append(", does not have a public, no arg constructor.");
-
-            throw new ServiceException(errorMessage.toString(), exception);
-        }
-        catch (InstantiationException exception)
-        {
-            StringBuffer errorMessage = new StringBuffer("Failure instantiating Service Provider Class, ");
-            errorMessage.append(serviceProviderClass.getName());
-            errorMessage.append(".  No arg constructor threw exception.");
-
-            throw new ServiceException(errorMessage.toString(), exception);
+            throw new IllegalArgumentException("name cannot be null.");
         }
 
-        return serviceLiasonToReturn;
+        if (serviceProvider == null)
+        {
+            throw new IllegalArgumentException("serviceProvider cannot be null.");
+        }
+
+        if (SERVICE_DEFINITIONS.containsKey(name))
+        {
+            StringBuffer errorMessage = new StringBuffer("Service with name, ");
+            errorMessage.append(name);
+            errorMessage.append(", already exists.");
+            throw new IllegalStateException(errorMessage.toString());
+        }
+
+        ServiceDefinition serviceDefinition = new ServiceDefinitionByInstance(serviceProvider);
+
+        SERVICE_DEFINITIONS.put(name, serviceDefinition);
     }
 
     public void shutdown()
@@ -157,27 +167,80 @@ public class ServiceManagerImpl implements ServiceManager
         SERVICE_DEFINITIONS.clear();
     }
 
-    private class ServiceDefinition
+    private abstract class ServiceDefinition
     {
-        private Class<? extends ServiceProvider> serviceProviderClass;
-        private Configuration serviceConfiguration;
+        protected Configuration serviceConfiguration;
 
-        private ServiceDefinition(
-                                  Class<? extends ServiceProvider> serviceProviderClass,
-                                  Configuration serviceConfiguration)
+        private ServiceDefinition(Configuration serviceConfiguration)
         {
-            this.serviceProviderClass = serviceProviderClass;
             this.serviceConfiguration = serviceConfiguration;
-        }
-
-        private Class<? extends ServiceProvider> getServiceProviderClass()
-        {
-            return this.serviceProviderClass;
         }
 
         private Configuration getServiceConfiguration()
         {
             return this.serviceConfiguration;
+        }
+
+        public abstract ServiceController getServiceLiason() throws ServiceException;
+    }
+
+    private class ServiceDefinitionByClass extends ServiceDefinition
+    {
+        private Class<? extends ServiceProvider> serviceProviderClass;
+
+        private ServiceDefinitionByClass(
+                                  Class<? extends ServiceProvider> serviceProviderClass,
+                                  Configuration serviceConfiguration)
+        {
+            super(serviceConfiguration);
+            this.serviceProviderClass = serviceProviderClass;
+        }
+
+        @Override
+        public ServiceController getServiceLiason() throws ServiceException
+        {
+            ServiceController serviceLiasonToReturn = null;
+
+            try
+            {
+                ServiceProvider serviceProvider = this.serviceProviderClass.newInstance();
+                serviceLiasonToReturn = serviceProvider.createService();
+            }
+            catch (IllegalAccessException exception)
+            {
+                StringBuffer errorMessage = new StringBuffer("Service provider class, ");
+                errorMessage.append(serviceProviderClass.getName());
+                errorMessage.append(", does not have a public, no arg constructor.");
+
+                throw new ServiceException(errorMessage.toString(), exception);
+            }
+            catch (InstantiationException exception)
+            {
+                StringBuffer errorMessage = new StringBuffer("Failure instantiating Service Provider Class, ");
+                errorMessage.append(serviceProviderClass.getName());
+                errorMessage.append(".  No arg constructor threw exception.");
+
+                throw new ServiceException(errorMessage.toString(), exception);
+            }
+
+            return serviceLiasonToReturn;
+        }
+    }
+
+    private class ServiceDefinitionByInstance extends ServiceDefinition
+    {
+        private ServiceProvider serviceProvider;
+
+        public ServiceDefinitionByInstance(ServiceProvider serviceProvider)
+        {
+            super(EMPTY_CONFIGURATION);
+            this.serviceProvider = serviceProvider;
+        }
+
+        @Override
+        public ServiceController getServiceLiason() throws ServiceException
+        {
+            return this.serviceProvider.createService();
         }
     }
 }

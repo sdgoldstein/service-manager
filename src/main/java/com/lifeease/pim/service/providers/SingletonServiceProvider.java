@@ -1,59 +1,75 @@
-/**
- * 
- */
-package com.lifeease.pim.service.simple;
+package com.lifeease.pim.service.providers;
 
-import com.lifeease.pim.service.Configuration;
-import com.lifeease.pim.service.Service;
-import com.lifeease.pim.service.ServiceController;
-import com.lifeease.pim.service.ServiceException;
-import com.lifeease.pim.service.ServiceProvider;
+import com.lifeease.pim.service.*;
 
-/**
- * @author sgoldstein
- * 
- */
-public abstract class SimpleServiceProvider implements ServiceProvider
+import java.util.HashMap;
+import java.util.Map;
+
+public class SingletonServiceProvider implements ServiceProvider
 {
+    private Class<? extends AbstractService> serviceClass;
+
+    private SingletonServiceProvider()
+    {
+    }
+
+    private SingletonServiceProvider(Class<? extends AbstractService> serviceClass)
+    {
+        if (serviceClass == null)
+        {
+            throw new IllegalArgumentException("service cannot be null");
+        }
+
+        this.serviceClass = serviceClass;
+    }
+
+    public static SingletonServiceProvider createSingletonSeviceProvider(Class<? extends AbstractService> serviceClass)
+    {
+        if (serviceClass == null)
+        {
+            throw new IllegalArgumentException("service cannot be null");
+        }
+
+        SingletonServiceProvider serviceProvider = new SingletonServiceProvider(serviceClass);
+        return serviceProvider;
+    }
+
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.lifeease.pim.service.ServiceProvider#createService()
      */
     @Override
     public ServiceController createService() throws ServiceException
     {
-        SimpleService createdService = null;
+        AbstractService createdService = null;
         try
         {
-            Class<? extends SimpleService> simpleServiceClass = getServiceClass();
-            createdService = simpleServiceClass.newInstance();
+            createdService = this.serviceClass.newInstance();
         }
         catch (InstantiationException exception)
         {
             throw new ServiceException("Failed to instantiate service",
-                                       exception);
+                    exception);
         }
         catch (IllegalAccessException exception)
         {
             throw new ServiceException("Failed to instantiate service",
-                                       exception);
+                    exception);
         }
 
-        // TODO Auto-generated method stub
-        return new SimpleServiceController(createdService);
+        return new ServiceControllerImpl(createdService);
     }
 
-    protected abstract Class<? extends SimpleService> getServiceClass();
-
-    private class SimpleServiceController implements ServiceController
+    private class ServiceControllerImpl implements ServiceController
     {
-        private SimpleService service;
+        // FIXME This should not require an abstract service.  Need a Service interface extension that indicates a service can be controlled
+        private AbstractService service;
 
         /**
-         * @param createdService
+         * @param service
          */
-        public SimpleServiceController(SimpleService service)
+        public ServiceControllerImpl(AbstractService service)
         {
             if (service == null)
             {
@@ -64,7 +80,7 @@ public abstract class SimpleServiceProvider implements ServiceProvider
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see com.lifeease.pim.service.ServiceLiaison#destroyService()
          */
         @Override
@@ -75,7 +91,7 @@ public abstract class SimpleServiceProvider implements ServiceProvider
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see com.lifeease.pim.service.ServiceLiaison#getService()
          */
         @Override
@@ -86,19 +102,19 @@ public abstract class SimpleServiceProvider implements ServiceProvider
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see com.lifeease.pim.service.ServiceLiaison#initService(com.lifeease.pim.service.Configuration)
          */
         @Override
         public void initService(Configuration configuration)
-            throws ServiceException
+                throws ServiceException
         {
             this.service.init(configuration);
         }
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see com.lifeease.pim.service.ServiceLiaison#startService()
          */
         @Override
@@ -110,7 +126,7 @@ public abstract class SimpleServiceProvider implements ServiceProvider
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see com.lifeease.pim.service.ServiceLiaison#stopService()
          */
         @Override
