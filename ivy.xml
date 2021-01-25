@@ -3,7 +3,7 @@
 			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 			xsi:noNamespaceSchemaLocation="http://www.jayasoft.org/misc/ivy/ivy.xsd">
   <info organisation="kameleon" module="service-manager"
-		revision="1.0" />
+		revision="2.0" />
   <configurations>
 	<conf name="main" />
 	<conf name="test" visibility="private" />
