@@ -1,15 +1,10 @@
 package com.lifeease.pim.service.defaultimpl;
 
-import com.lifeease.pim.service.Configuration;
-import com.lifeease.pim.service.MapConfiguration;
-import com.lifeease.pim.service.Service;
-import com.lifeease.pim.service.ServiceController;
-import com.lifeease.pim.service.ServiceException;
-import com.lifeease.pim.service.ServiceManager;
-import com.lifeease.pim.service.ServiceNotAvailableException;
-import com.lifeease.pim.service.ServiceProvider;
+import com.lifeease.pim.service.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -17,19 +12,16 @@ import java.util.Map.Entry;
 
 /**
  * Default implementation of the Service Manager interface
- * 
+ *
  * @author sgoldstein
- * 
  */
 public class ServiceManagerImpl implements ServiceManager
 {
-    private static Log LOG = LogFactory.getLog(ServiceManagerImpl.class.getName());
-
     private static final Configuration EMPTY_CONFIGURATION = new MapConfiguration();
-
     // Currently, all services are singletons
     private static final Map<String, ServiceController> CONTROLLERS_FOR_ACTIVE_SERVICES = new HashMap<String, ServiceController>();
     private static final Map<String, ServiceDefinition> SERVICE_DEFINITIONS = new HashMap<String, ServiceDefinition>();
+    private static final Log LOG = LogFactory.getLog(ServiceManagerImpl.class.getName());
 
     public Service getService(String name) throws ServiceException
     {
@@ -78,7 +70,7 @@ public class ServiceManagerImpl implements ServiceManager
 
     public void defineService(String name,
                               Class<? extends ServiceProvider> serviceClass)
-        throws ServiceException
+            throws ServiceException
     {
         defineService(name, serviceClass, EMPTY_CONFIGURATION);
     }
@@ -86,7 +78,7 @@ public class ServiceManagerImpl implements ServiceManager
     public void defineService(String name,
                               Class<? extends ServiceProvider> serviceProviderClass,
                               Configuration configuration)
-        throws ServiceException
+            throws ServiceException
     {
         if (name == null)
         {
@@ -111,8 +103,14 @@ public class ServiceManagerImpl implements ServiceManager
             throw new IllegalStateException(errorMessage.toString());
         }
 
+        if (!hasParameterlessPublicConstructor(serviceProviderClass))
+        {
+            throw new IllegalArgumentException("serviceProviderClass must have a no argument constructor");
+        }
+
+
         ServiceDefinition serviceDefinition = new ServiceDefinitionByClass(serviceProviderClass,
-                                                                    configuration);
+                configuration);
         SERVICE_DEFINITIONS.put(name, serviceDefinition);
     }
 
@@ -146,7 +144,7 @@ public class ServiceManagerImpl implements ServiceManager
     {
         // FIX ME - What about inactive (or stopped) services
         Iterator<Entry<String, ServiceController>> serviceLiasonIterator = CONTROLLERS_FOR_ACTIVE_SERVICES.entrySet()
-                                                                                                          .iterator();
+                .iterator();
         while (serviceLiasonIterator.hasNext())
         {
             Entry<String, ServiceController> nextServiceControllerEntry = serviceLiasonIterator.next();
@@ -159,12 +157,30 @@ public class ServiceManagerImpl implements ServiceManager
             catch (Throwable throwable)
             {
                 LOG.error("Failed to stop service with name, "
-                          + nextServiceControllerEntry.getKey(), throwable);
+                        + nextServiceControllerEntry.getKey(), throwable);
             }
         }
 
         CONTROLLERS_FOR_ACTIVE_SERVICES.clear();
         SERVICE_DEFINITIONS.clear();
+    }
+
+    private boolean hasParameterlessPublicConstructor(Class<? extends ServiceProvider> clazz)
+    {
+        //FIXME refactor so that there is a single return point in fuction
+
+        boolean noArgConstructorFound = false;
+        Constructor<?>[] constructors = clazz.getConstructors();
+        for (int i=0; i<constructors.length && !noArgConstructorFound; i++)
+        {
+            // In Java 7-, use getParameterTypes and check the length of the array returned
+            if (constructors[i].getParameterCount() == 0)
+            {
+                noArgConstructorFound = true;
+            }
+        }
+
+        return noArgConstructorFound;
     }
 
     private abstract class ServiceDefinition
@@ -186,11 +202,11 @@ public class ServiceManagerImpl implements ServiceManager
 
     private class ServiceDefinitionByClass extends ServiceDefinition
     {
-        private Class<? extends ServiceProvider> serviceProviderClass;
+        private final Class<? extends ServiceProvider> serviceProviderClass;
 
         private ServiceDefinitionByClass(
-                                  Class<? extends ServiceProvider> serviceProviderClass,
-                                  Configuration serviceConfiguration)
+                Class<? extends ServiceProvider> serviceProviderClass,
+                Configuration serviceConfiguration)
         {
             super(serviceConfiguration);
             this.serviceProviderClass = serviceProviderClass;
@@ -229,7 +245,7 @@ public class ServiceManagerImpl implements ServiceManager
 
     private class ServiceDefinitionByInstance extends ServiceDefinition
     {
-        private ServiceProvider serviceProvider;
+        private final ServiceProvider serviceProvider;
 
         public ServiceDefinitionByInstance(ServiceProvider serviceProvider)
         {

@@ -112,9 +112,9 @@ public class TestServiceManagerImpl extends TestCase
             this.serviceManagerToTest.defineService("BadNoConstructorService",
                                                     BadNoConstructorServiceProvider.class,
                                                     config);
-            fail("Should throw ServiceException");
+            fail("Should throw IllegalArgumentException for bad constructor");
         }
-        catch (ServiceException exception)
+        catch (IllegalArgumentException exception)
         {
         }
 
@@ -123,9 +123,9 @@ public class TestServiceManagerImpl extends TestCase
             this.serviceManagerToTest.defineService("InaccessibleService",
                                                     InaccessibleServiceProvider.class,
                                                     config);
-            fail("Should throw ServiceException for inaccessible service");
+            fail("Should throw IllegalArgymentException for inaccessible service");
         }
-        catch (ServiceException exception)
+        catch (IllegalArgumentException exception)
         {
         }
 
@@ -195,9 +195,9 @@ public class TestServiceManagerImpl extends TestCase
         {
             this.serviceManagerToTest.defineService("BadNoConstructorService",
                                                     BadNoConstructorServiceProvider.class);
-            fail("Should throw ServiceException");
+            fail("Should throw IllegalArgumentException for bad constructor");
         }
-        catch (ServiceException exception)
+        catch (IllegalArgumentException exception)
         {
         }
 
@@ -205,9 +205,9 @@ public class TestServiceManagerImpl extends TestCase
         {
             this.serviceManagerToTest.defineService("InaccessibleService",
                                                     InaccessibleServiceProvider.class);
-            fail("Should throw ServiceException for inaccessible service");
+            fail("Should throw IllegalArgumentException for inaccessible service");
         }
-        catch (ServiceException exception)
+        catch (IllegalArgumentException exception)
         {
         }
 
