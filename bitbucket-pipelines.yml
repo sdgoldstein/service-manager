@@ -10,19 +10,16 @@ image: maven:3.6.3
 pipelines:
   tags:
     '**':
-    - parallel:
-      - step:
-          name: Build and Test
-          caches:
-            - maven
-          script:
-            - mvn -B -C verify --file pom.xml
-          #after-script:
-              # Collect checkstyle results, if any, and convert to Bitbucket Code Insights.
-           # - pipe: atlassian/checkstyle-report:0.3.0
-      #- step:
-          #name: Security Scan
-          #script:
-            # Run a security scan for sensitive data.
-            # See more security tools at https://bitbucket.org/product/features/pipelines/integrations?&category=security
-            #- pipe: atlassian/git-secrets-scan:0.5.1
+    - step:
+        name: Build and Test
+        caches:
+          - maven
+        script:
+          - mvn -B -C verify --file pom.xml
+    - step:
+        name: Push to Artifact Repository
+        script:
+          - mvn 
+        #after-script:
+         # Collect checkstyle results, if any, and convert to Bitbucket Code Insights.
+         # - pipe: atlassian/checkstyle-report:0.3.0
