@@ -15,4 +15,5 @@ pipelines:
         caches:
           - maven
         script:
+          - git config --global user.email "sgoldstein@apache.org"
           - mvn -B -C deploy --file pom.xml
