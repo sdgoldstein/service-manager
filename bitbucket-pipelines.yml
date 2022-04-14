@@ -15,5 +15,6 @@ pipelines:
         caches:
           - maven
         script:
+          - rm -rf tmp/wagon-git-e32cfaa675b19483ef204961ba3e3b46d3e315cd
           - git config --global user.email "sgoldstein@apache.org"
           - mvn -B -C -X deploy --file pom.xml -Dwagon.git.debug=true
