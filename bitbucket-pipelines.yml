@@ -15,11 +15,5 @@ pipelines:
         caches:
           - maven
         script:
-          - mvn -B -C verify --file pom.xml
-    - step:
-        name: Push to Artifact Repository
-        script:
-          - mvn 
-        #after-script:
-         # Collect checkstyle results, if any, and convert to Bitbucket Code Insights.
-         # - pipe: atlassian/checkstyle-report:0.3.0
+          - git config --global user.email "sgoldstein@apache.org"
+          - mvn -B deploy --file pom.xml 
