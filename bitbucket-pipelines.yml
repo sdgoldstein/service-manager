@@ -16,4 +16,4 @@ pipelines:
           - maven
         script:
           - git config --global user.email "sgoldstein@apache.org"
-          - mvn -B deploy --file pom.xml 
+          - mvn -X -B deploy --file pom.xml 
