@@ -14,8 +14,8 @@
     <archetype.encoding>${encoding}</archetype.encoding>
   </properties>
   <scm>
-    <connection>scm:git:https://sgoldstein@bitbucket.org/sgoldstein/service.git</connection>
-    <developerConnection>scm:git:https://sgoldstein@bitbucket.org/sgoldstein/service.git</developerConnection>
+    <connection>scm:git:git@bitbucket.org:sgoldstein/service.git</connection>
+    <developerConnection>scm:git:git@bitbucket.org:sgoldstein/service.git</developerConnection>
     <tag>@{project.version}</tag>
   </scm>
   <pluginRepositories>
