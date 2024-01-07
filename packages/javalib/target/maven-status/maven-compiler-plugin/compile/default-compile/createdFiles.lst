@@ -1,0 +1,17 @@
+com/lifeease/pim/service/Configuration.class
+com/lifeease/pim/service/ServiceException.class
+com/lifeease/pim/service/InvalidServiceDefinitionException.class
+com/lifeease/pim/service/defaultimpl/ServiceManagerImpl.class
+com/lifeease/pim/service/MapConfiguration.class
+com/lifeease/pim/service/defaultimpl/ServiceManagerImpl$ServiceDefinitionByClass.class
+com/lifeease/pim/service/ServiceProvider.class
+com/lifeease/pim/service/ServiceController.class
+com/lifeease/pim/service/defaultimpl/ServiceManagerImpl$ServiceDefinitionByInstance.class
+com/lifeease/pim/service/providers/AbstractService.class
+com/lifeease/pim/service/ServiceManagerFactory.class
+com/lifeease/pim/service/ServiceManager.class
+com/lifeease/pim/service/ServiceNotAvailableException.class
+com/lifeease/pim/service/providers/SingletonServiceProvider.class
+com/lifeease/pim/service/defaultimpl/ServiceManagerImpl$ServiceDefinition.class
+com/lifeease/pim/service/Service.class
+com/lifeease/pim/service/providers/SingletonServiceProvider$ServiceControllerImpl.class

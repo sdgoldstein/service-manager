@@ -1,0 +1,53 @@
+{
+  "name": "core-common",
+  "version": "1.0.0",
+  "description": "Common code shared by the front and back end of the core webapp",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./framework": {
+      "import": "./build/framework/index.js",
+      "types": "./build/framework/index.d.ts"
+    },
+    "./jscore": {
+      "import": "./build/jscore/index.js",
+      "types": "./build/jscore/index.d.ts"
+    },
+    "./services": {
+      "import": "./build/services/index.js",
+      "types": "./build/services/index.d.ts"
+    }
+  },
+  "scripts": {
+    "initialize": "npm install",
+    "prepack": "npmignore --auto & cp -r build/main/ dist/",
+    "compile": "tsc",
+    "clean": "rm -rf ./build",
+    "test": "vitest --run",
+    "test_watch": "vitest",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@types/node": "20.10.6",
+    "typescript": "5.3.3",
+    "@sphyrna/tscore": "0.1.1",
+    "@typescript-eslint/eslint-plugin": "6.16.0",
+    "eslint": "8.56.0",
+    "eslint-plugin-import": "2.29.1",
+    "eslint-plugin-sonarjs": "0.23.0",
+    "npmignore": "^0.3.1",
+    "vitest": "1.1.0",
+    "vitest-mock-extended": "1.3.1"
+  },
+  "dependencies": {},
+  "publishConfig": {
+    "ignore": [
+      "!dist/",
+      ".clang-format",
+      ".eslintrc.cjs",
+      "src/",
+      "tsconfig.json",
+      "vitest.config.ts"
+    ]
+  }
+}

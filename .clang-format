@@ -1,0 +1,7 @@
+AlignEscapedNewlines: Left
+AllowShortBlocksOnASingleLine: Empty
+AllowShortFunctionsOnASingleLine: Empty 
+BreakAfterJavaFieldAnnotations: 'true'
+BreakBeforeBraces: Allman
+ColumnLimit: 120
+IndentWidth: 4

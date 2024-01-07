@@ -1,0 +1,13 @@
+/Users/kameleon/Code/service/packages/javalib/src/main/java/com/lifeease/pim/service/ServiceNotAvailableException.java
+/Users/kameleon/Code/service/packages/javalib/src/main/java/com/lifeease/pim/service/InvalidServiceDefinitionException.java
+/Users/kameleon/Code/service/packages/javalib/src/main/java/com/lifeease/pim/service/ServiceController.java
+/Users/kameleon/Code/service/packages/javalib/src/main/java/com/lifeease/pim/service/ServiceException.java
+/Users/kameleon/Code/service/packages/javalib/src/main/java/com/lifeease/pim/service/providers/SingletonServiceProvider.java
+/Users/kameleon/Code/service/packages/javalib/src/main/java/com/lifeease/pim/service/MapConfiguration.java
+/Users/kameleon/Code/service/packages/javalib/src/main/java/com/lifeease/pim/service/providers/AbstractService.java
+/Users/kameleon/Code/service/packages/javalib/src/main/java/com/lifeease/pim/service/Service.java
+/Users/kameleon/Code/service/packages/javalib/src/main/java/com/lifeease/pim/service/defaultimpl/ServiceManagerImpl.java
+/Users/kameleon/Code/service/packages/javalib/src/main/java/com/lifeease/pim/service/ServiceManager.java
+/Users/kameleon/Code/service/packages/javalib/src/main/java/com/lifeease/pim/service/ServiceManagerFactory.java
+/Users/kameleon/Code/service/packages/javalib/src/main/java/com/lifeease/pim/service/Configuration.java
+/Users/kameleon/Code/service/packages/javalib/src/main/java/com/lifeease/pim/service/ServiceProvider.java

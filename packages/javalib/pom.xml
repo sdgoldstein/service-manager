@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.kameleon.framework</groupId>
+    <artifactId>service-manager</artifactId>
+    <version>0.3</version>
+    <relativePath>../../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>service-manager-java</artifactId>
+  <packaging>jar</packaging>
+
+  <name>Service Manager Java</name>
+
+  <properties>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
+    <encoding>UTF-8</encoding>
+    <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>${encoding}</project.reporting.outputEncoding>
+    <project.resources.sourceEncoding>${encoding}</project.resources.sourceEncoding>
+    <archetype.encoding>${encoding}</archetype.encoding>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.3.0</version>
+        <configuration>
+          <archive>
+            <index>true</index>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <addBuildEnvironmentEntries>true</addBuildEnvironmentEntries>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.3.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.10.1</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>
