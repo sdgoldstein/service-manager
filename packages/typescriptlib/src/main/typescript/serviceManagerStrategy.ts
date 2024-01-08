@@ -2,9 +2,9 @@ import {GuardedMap} from "@sphyrna/tscore";
 
 import {Service} from "./service";
 import {EMPTY_SERVICE_CONFIGURATION, ServiceConfiguration} from "./serviceConfiguration";
+import {ServiceError} from "./serviceError";
 import {DefaultServiceInstanceProviderImpl, ServiceInstanceProvider} from "./serviceInstanceProvider";
 import {KnownServiceLifecycleControllers, ServiceLifecycleController} from "./serviceLifecycleController";
-import {ServiceError} from "./serviceError";
 
 /**
  * Defines a Service Manager Strategy that controls the behavior of the ServiceManager
@@ -36,23 +36,39 @@ interface ServiceManagerStrategy
  */
 class ServiceDefinition<T extends Service>
 {
+
+    private _serviceInstanceProvider: ServiceInstanceProvider<T>|undefined;
+
     serviceConfiguration: ServiceConfiguration;
 
-    constructor(readonly serviceInstanceProvider: ServiceInstanceProvider<T>,
-                readonly serviceLifecycleController: ServiceLifecycleController<T>, config?: ServiceConfiguration)
+    constructor(serviceLifecycleController: ServiceLifecycleController<T>);
+    constructor(serviceLifecycleController: ServiceLifecycleController<T>,
+                serviceInstanceProvider: ServiceInstanceProvider<T>, config?: ServiceConfiguration);
+    constructor(readonly serviceLifecycleController: ServiceLifecycleController<T>,
+                serviceInstanceProvider?: ServiceInstanceProvider<T>, config?: ServiceConfiguration)
     {
-        if (!config)
+        this._serviceInstanceProvider = serviceInstanceProvider;
+
+        this.serviceConfiguration = config ?? EMPTY_SERVICE_CONFIGURATION;
+    }
+
+    hasServiceInstanceProvider(): boolean
+    {
+        return (this._serviceInstanceProvider !== undefined);
+    }
+
+    get serviceInstanceProvider(): ServiceInstanceProvider<T>
+    {
+        if (this._serviceInstanceProvider === undefined)
         {
-            this.serviceConfiguration = EMPTY_SERVICE_CONFIGURATION;
+            throw new ServiceError("get serviceInstanceProvider called when one doesn't exist")
         }
-        else
-        {
-            this.serviceConfiguration = config;
-        }
+
+        return this._serviceInstanceProvider;
     }
 }
 
-abstract class BaseServiceManagerStrategy implements ServiceManagerStrategy
+class DefaultServiceManagerStrategyImpl implements ServiceManagerStrategy
 {
     private readonly CONTROLLERS_FOR_ACTIVE_SERVICES: GuardedMap<string, ServiceLifecycleController<Service>> =
         new Map<string, ServiceLifecycleController<Service>>();
@@ -61,14 +77,57 @@ abstract class BaseServiceManagerStrategy implements ServiceManagerStrategy
         new Map<string, ServiceDefinition<Service>>();
 
     /**
-     * Register a service
+     * Register a service.  This is the minimal number of inputs needed to register a new service.
+     *
+     * IMPORTANT NOTE: If registering a lifecycle controller through this method, the init(serviceInstanceProvider:
+     * ServiceInstanceProvider<T>, config: C) method will NOT be called.  If it must be called, it should be invoked by
+     * the client before registering the service
      *
      * @param name
      *            the name of the defined service
-     * @param serviceInstanceProvider
-     *            a factory that will create an instance of the service
      * @param serviceLifecycleController
      *            controls the service lifeycle. For known controllers,
+     * see {@KnownServiceLifecycleControllers}
+     * @param override
+     *            An optional boolean indicating whether or not to override an
+     * existing defintion with the same name. If this is false and a service
+     * definition already exists, an error will be thrown
+     */
+    registerServiceByControllerOnly<T extends Service, C extends ServiceConfiguration = ServiceConfiguration>(
+        name: string, serviceLifecycleController: ServiceLifecycleController<T, C>, override?: boolean): void
+    {
+        if (this.SERVICE_DEFINITIONS.has(name))
+        {
+            this.handleServiceOverride(name, override);
+        }
+
+        const serviceDefinition: ServiceDefinition<T> = new ServiceDefinition(serviceLifecycleController);
+        this.SERVICE_DEFINITIONS.set(name, serviceDefinition);
+    }
+
+    registerService<T extends Service, C extends ServiceConfiguration = ServiceConfiguration>(
+        name: string, serviceInstanceProvider: ServiceInstanceProvider<T>,
+        serviceLifecycleController: ServiceLifecycleController<T, C>, config?: C, override?: boolean): void
+    {
+        if (this.SERVICE_DEFINITIONS.has(name))
+        {
+            this.handleServiceOverride(name, override);
+        }
+
+        const serviceDefinition: ServiceDefinition<T> =
+            new ServiceDefinition(serviceLifecycleController, serviceInstanceProvider, config);
+        this.SERVICE_DEFINITIONS.set(name, serviceDefinition);
+    }
+
+    /**
+     * Register a service providing a contructor method for a service class and service lifecycle controller class
+     *
+     * @param name
+     *            the name of the defined service
+     * @param serviceClass
+     *            the class that implements the service
+     * @param serviceLifecycleControllerClass
+     *            the class that controls the service lifeycle. For known controllers,
      * see {@KnownServiceLifecycleControllers}
      * @param config
      *            An Optional config may be supplied for service definition level
@@ -78,18 +137,34 @@ abstract class BaseServiceManagerStrategy implements ServiceManagerStrategy
      * existing defintion with the same name. If this is false and a service
      * definition already exists, an error will be thrown
      */
-    protected registerService<T extends Service, C extends ServiceConfiguration = ServiceConfiguration>(
-        name: string, serviceInstanceProvider: ServiceInstanceProvider<T>,
-        serviceLifecycleController: ServiceLifecycleController<T>, config?: C, override?: boolean): void
+    registerServiceByClass<T extends Service, C extends ServiceConfiguration = ServiceConfiguration>(
+        name: string, serviceClass: new() => T, serviceLifecycleControllerClass: new() => ServiceLifecycleController<T>,
+        config?: C, override?: boolean): void
     {
-        if (this.SERVICE_DEFINITIONS.has(name) && !override)
-        {
-            throw new ServiceError(`Service with name, ${name}, is already defined`);
-        }
+        const serviceProvider = new DefaultServiceInstanceProviderImpl(serviceClass);
+        const serviceLifecycleController = new serviceLifecycleControllerClass();
+        this.registerService(name, serviceProvider, serviceLifecycleController, config, override);
+    }
 
-        const serviceDefinition: ServiceDefinition<T> =
-            new ServiceDefinition(serviceInstanceProvider, serviceLifecycleController, config);
-        this.SERVICE_DEFINITIONS.set(name, serviceDefinition);
+    /**
+     * Register a service that has a singleton lifecycle (only one instance exists)
+     *
+     * @param name
+     *            the name of the defined service
+     * @param serviceClass
+     *            the class that implements the service
+     * @param config
+     *            An Optional config may be supplied for service definition level
+     * configuration.
+     * @param override
+     *            An optional boolean indicating whether or not to override an
+     * existing defintion with the same name. If this is false and a service
+     * definition already exists, an error will be thrown
+     */
+    registerSingletonService<T extends Service, C extends ServiceConfiguration = ServiceConfiguration>(
+        name: string, serviceClass: new() => T, config?: C, override?: boolean): void
+    {
+        this.registerServiceByClass(name, serviceClass, KnownServiceLifecycleControllers.SINGLETON, config, override);
     }
 
     getService<T extends Service, C extends ServiceConfiguration = ServiceConfiguration>(name: string, config?: C): T
@@ -111,8 +186,11 @@ abstract class BaseServiceManagerStrategy implements ServiceManagerStrategy
             const serviceDefinition: ServiceDefinition<Service> = this.SERVICE_DEFINITIONS.get(name);
             serviceLifecycleController = serviceDefinition.serviceLifecycleController;
 
-            serviceLifecycleController.init(serviceDefinition.serviceInstanceProvider,
-                                            serviceDefinition.serviceConfiguration);
+            if (serviceDefinition.hasServiceInstanceProvider())
+            {
+                serviceLifecycleController.init(serviceDefinition.serviceInstanceProvider,
+                                                serviceDefinition.serviceConfiguration);
+            }
             this.CONTROLLERS_FOR_ACTIVE_SERVICES.set(name, serviceLifecycleController);
         }
 
@@ -133,93 +211,34 @@ abstract class BaseServiceManagerStrategy implements ServiceManagerStrategy
         this.CONTROLLERS_FOR_ACTIVE_SERVICES.clear();
         this.SERVICE_DEFINITIONS.clear();
     }
-}
 
-/**
- * Concrete implementation that can be used at runtime to programmatically register services
- */
-class RuntimeInitializedServiceManagerStrategy extends BaseServiceManagerStrategy implements ServiceManagerStrategy
-{
-    /**
-     * Convenience method to register a service that has a singleton lifecycle (only one instance exists)
-     *
-     * @param name
-     *            the name of the defined service
-     * @param serviceClass
-     *            the class that implements the service
-     * @param config
-     *            An Optional config may be supplied for service definition level
-     * configuration.
-     * @param override
-     *            An optional boolean indicating whether or not to override an
-     * existing defintion with the same name. If this is false and a service
-     * definition already exists, an error will be thrown
-     */
-    registerSingletonService<T extends Service, C extends ServiceConfiguration = ServiceConfiguration>(
-        name: string, serviceClass: new() => T, config?: C, override?: boolean): void
+    private handleServiceOverride(name: string, override?: boolean)
     {
-        this.registerServiceByClass(name, serviceClass, new KnownServiceLifecycleControllers.SINGLETON(), config,
-                                    override);
-    }
-
-    /**
-     * Convenience method to register a service providing a contructor method for a class
-     *
-     * @param name
-     *            the name of the defined service
-     * @param serviceClass
-     *            the class that implements the service
-     * @param serviceLifecycleController
-     *            controls the service lifeycle. For known controllers,
-     * see {@KnownServiceLifecycleControllers}
-     * @param config
-     *            An Optional config may be supplied for service definition level
-     * configuration.
-     * @param override
-     *            An optional boolean indicating whether or not to override an
-     * existing defintion with the same name. If this is false and a service
-     * definition already exists, an error will be thrown
-     */
-    registerServiceByClass<T extends Service, C extends ServiceConfiguration = ServiceConfiguration>(
-        name: string, serviceClass: new() => T, serviceLifecycleController: ServiceLifecycleController<T>, config?: C,
-        override?: boolean): void
-    {
-        const serviceProvider = new DefaultServiceInstanceProviderImpl(serviceClass);
-        this.registerService(name, serviceProvider, serviceLifecycleController, config, override);
-    }
-
-    /**
-     * Register a service
-     *
-     * @param name
-     *            the name of the defined service
-     * @param serviceInstanceProvider
-     *            a factory that will create an instance of the service
-     * @param serviceLifecycleController
-     *            controls the service lifeycle. For known controllers,
-     * see {@KnownServiceLifecycleControllers}
-     * @param config
-     *            An Optional config may be supplied for service definition level
-     * configuration.
-     * @param override
-     *            An optional boolean indicating whether or not to override an
-     * existing defintion with the same name. If this is false and a service
-     * definition already exists, an error will be thrown
-     */
-    registerService<T extends Service, C extends ServiceConfiguration = ServiceConfiguration>(
-        name: string, serviceInstanceProvider: ServiceInstanceProvider<T>,
-        serviceLifecycleController: ServiceLifecycleController<T>, config?: C, override?: boolean): void
-    {
-        super.registerService(name, serviceInstanceProvider, serviceLifecycleController, config, override);
+        if (override)
+        {
+            // This is an override.  Remove defintions.  Shutdown lifecycle controller
+            this.SERVICE_DEFINITIONS.delete(name);
+            if (this.CONTROLLERS_FOR_ACTIVE_SERVICES.has(name))
+            {
+                const controllerToRemove = this.CONTROLLERS_FOR_ACTIVE_SERVICES.get(name);
+                controllerToRemove.shutdown();
+                this.CONTROLLERS_FOR_ACTIVE_SERVICES.delete(name);
+            }
+        }
+        else
+        {
+            throw new ServiceError(
+                `Service with name, ${name}, is already defined.  Specify override=true if it should be replaced`);
+        }
     }
 }
 
 /**
  * A strategy that reads service configuration from serviceConfig.json.  FIXME - To Be Implemented
  */
-class ConfigServiceManagerStrategy extends BaseServiceManagerStrategy implements ServiceManagerStrategy
+class ConfigServiceManagerStrategy extends DefaultServiceManagerStrategyImpl implements ServiceManagerStrategy
 {
 }
 
 export type {ServiceManagerStrategy};
-export {ConfigServiceManagerStrategy, RuntimeInitializedServiceManagerStrategy};
+export {ConfigServiceManagerStrategy, DefaultServiceManagerStrategyImpl};

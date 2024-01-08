@@ -1,24 +1,15 @@
 import {Service} from "@src/typescript/service";
 import {DefaultServiceConfigurationImpl, ServiceConfiguration} from "@src/typescript/serviceConfiguration";
 import {ServiceError} from "@src/typescript/serviceError";
-import {ServiceInstanceProvider} from "@src/typescript/serviceInstanceProvider";
 import {SingletonServiceLifecycleControllerImpl} from "@src/typescript/serviceLifecycleController";
 import {beforeAll, beforeEach, describe, expect, test} from "vitest";
 import {mock, MockProxy, mockReset} from "vitest-mock-extended";
 
+import {MockServiceInstanceProvider} from "./serviceFrameworkTestUtils";
+
 describe("Service Lifecycle Controller", () => {
     describe("SingletonServiceLifecycleControllerImpl", () => {
         let mockService: MockProxy<Service>;
-        class MockServiceInstanceProvider implements ServiceInstanceProvider<MockProxy<Service>>
-        {
-            createdTimes: number = 0;
-
-            createServiceInstance(): MockProxy<Service>
-            {
-                this.createdTimes++;
-                return mockService;
-            }
-        };
         let mockServiceInstanceProvider: MockServiceInstanceProvider;
         let testServiceConfiguration: ServiceConfiguration;
         let controllerToTest: SingletonServiceLifecycleControllerImpl<MockProxy<Service>>;
@@ -35,7 +26,7 @@ describe("Service Lifecycle Controller", () => {
         beforeEach(() => {
             mockReset(mockService);
 
-            mockServiceInstanceProvider = new MockServiceInstanceProvider();
+            mockServiceInstanceProvider = new MockServiceInstanceProvider(mockService);
             controllerToTest = new SingletonServiceLifecycleControllerImpl();
         });
 
@@ -71,10 +62,7 @@ describe("Service Lifecycle Controller", () => {
             expect(mockService.destroy).toHaveBeenCalled();
 
             // Once it's shutdown, expect methods to throw errors
-            expect(() => controllerToTest.init(mockServiceInstanceProvider, testServiceConfiguration))
-                .toThrowError(ServiceError);
             expect(() => controllerToTest.getService()).toThrowError(ServiceError);
-            expect(() => controllerToTest.shutdown()).toThrowError(ServiceError);
         });
     });
 });

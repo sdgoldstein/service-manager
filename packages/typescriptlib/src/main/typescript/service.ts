@@ -6,14 +6,14 @@ import {ServiceConfiguration} from './serviceConfiguration';
  *
  * @author sgoldstein
  */
-interface Service
+interface Service<C extends ServiceConfiguration = ServiceConfiguration>
 {
     /**
      * Initializes the service instance
      *
      * @param configuration Service level configuration
      */
-    init(configuration: ServiceConfiguration): void;
+    init(configuration: C): void;
 
     /**
      * Starts the service instances
@@ -36,14 +36,14 @@ interface Service
  * Base instance of a Service which is a noop for all methods.  Extend to create
  * a new service and implement the methods that are required
  */
-abstract class BaseService implements Service
+abstract class BaseService<C extends ServiceConfiguration = ServiceConfiguration> implements Service<C>
 {
     destroy(): void
     {
         // Do Nothing Implementation
     }
 
-    init(configuration: ServiceConfiguration): void
+    init(configuration: C): void
     {
         // Do Nothing Implementation
     }
