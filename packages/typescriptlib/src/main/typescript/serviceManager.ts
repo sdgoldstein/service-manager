@@ -1,6 +1,6 @@
-import {Service} from "./service";
-import {ServiceConfiguration} from "./serviceConfiguration";
-import {ConfigServiceManagerStrategy, ServiceManagerStrategy} from "./serviceManagerStrategy";
+import {Service} from "./service.js";
+import {ServiceConfiguration} from "./serviceConfiguration.js";
+import {ConfigServiceManagerStrategy, ServiceManagerStrategy} from "./serviceManagerStrategy.js";
 
 /**
  * The ServiceManager is used to manage and retrieve services.  It's a proxy to

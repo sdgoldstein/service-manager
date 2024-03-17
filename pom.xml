@@ -14,6 +14,7 @@
     <modules>
         <module>packages/javalib</module>
         <module>packages/typescriptlib</module>
+        <module>packages/pythonlib</module>
     </modules>
 
     <!-- FIXME -->

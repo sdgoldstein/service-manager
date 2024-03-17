@@ -1,5 +1,5 @@
 import {Service} from "@src/typescript/service";
-import {DefaultServiceConfigurationImpl, ServiceConfiguration} from "@src/typescript/serviceConfiguration";
+import {ServiceConfiguration} from "@src/typescript/serviceConfiguration";
 import {ServiceError} from "@src/typescript/serviceError";
 import {SingletonServiceLifecycleControllerImpl} from "@src/typescript/serviceLifecycleController";
 import {beforeAll, beforeEach, describe, expect, test} from "vitest";
@@ -16,11 +16,7 @@ describe("Service Lifecycle Controller", () => {
 
         beforeAll(() => {
             mockService = mock<Service>();
-            const properties = new Map<string, any>();
-            properties.set("key1", "value1");
-            properties.set("key2", "value2");
-
-            testServiceConfiguration = new DefaultServiceConfigurationImpl(properties);
+            testServiceConfiguration = {key1 : "value1", key2 : "value2"};
         });
 
         beforeEach(() => {

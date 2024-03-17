@@ -1,28 +1,19 @@
 {
-  "name": "core-common",
-  "version": "1.0.0",
-  "description": "Common code shared by the front and back end of the core webapp",
-  "private": true,
+  "name": "@sphyrna/service-manager-ts",
+  "version": "0.2.0",
+  "description": "Typescript implementation of a service manager framework",
   "type": "module",
   "exports": {
-    "./framework": {
-      "import": "./build/framework/index.js",
-      "types": "./build/framework/index.d.ts"
-    },
-    "./jscore": {
-      "import": "./build/jscore/index.js",
-      "types": "./build/jscore/index.d.ts"
-    },
-    "./services": {
-      "import": "./build/services/index.js",
-      "types": "./build/services/index.d.ts"
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     }
   },
   "scripts": {
     "initialize": "npm install",
-    "prepack": "npmignore --auto & cp -r build/main/ dist/",
+    "prepack": "npmignore --auto & cp -r build/main/typescript dist/",
     "compile": "tsc",
-    "clean": "rm -rf ./build",
+    "clean": "rm -rf ./build & rm -rf dist",
     "test": "vitest --run",
     "test_watch": "vitest",
     "lint": "eslint ."

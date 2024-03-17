@@ -1,9 +1,5 @@
 import {Service} from "@src/typescript/service";
-import {
-    DefaultServiceConfigurationImpl,
-    EMPTY_SERVICE_CONFIGURATION,
-    ServiceConfiguration
-} from "@src/typescript/serviceConfiguration";
+import {EMPTY_SERVICE_CONFIGURATION, ServiceConfiguration} from "@src/typescript/serviceConfiguration";
 import {ServiceError} from "@src/typescript/serviceError";
 import {
     ServiceLifecycleController,
@@ -22,12 +18,7 @@ let mockServiceLifecycleController: ServiceLifecycleController<MockProxy<Service
 beforeAll(() => {
     mockService = mock<Service>();
     mockServiceInstanceProvider = new MockServiceInstanceProvider(mockService);
-
-    const properties = new Map<string, any>();
-    properties.set("key1", "value1");
-    properties.set("key2", "value2");
-
-    testServiceConfiguration = new DefaultServiceConfigurationImpl(properties);
+    testServiceConfiguration = {key1 : "value1", key2 : "value2"};
     mockServiceLifecycleController = mock<ServiceLifecycleController<MockProxy<Service>>>();
 });
 

@@ -1,4 +1,4 @@
-import {DefaultServiceConfigurationImpl, ServiceConfiguration} from "@src/typescript/serviceConfiguration";
+import {ServiceConfiguration} from "@src/typescript/serviceConfiguration";
 import {ServiceManager} from "@src/typescript/serviceManager"
 import {ServiceManagerStrategy} from "@src/typescript/serviceManagerStrategy";
 import {beforeAll, expect, test} from "vitest"
@@ -14,7 +14,7 @@ test("setDefaultStrategy/getService", () => {
     expect(mockStrategy.getService).toBeCalledWith("someService", undefined);
 
     // Test with a config
-    let serviceConfig: ServiceConfiguration = new DefaultServiceConfigurationImpl(new Map([ [ "foo", "bar" ] ]));
+    let serviceConfig: ServiceConfiguration = {foo : "bar"};
     ServiceManager.getService("someOtherService", serviceConfig);
     expect(mockStrategy.getService).toBeCalledWith("someOtherService", serviceConfig);
 })

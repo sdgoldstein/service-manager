@@ -1,10 +1,10 @@
 import {GuardedMap} from "@sphyrna/tscore";
 
-import {Service} from "./service";
-import {EMPTY_SERVICE_CONFIGURATION, ServiceConfiguration} from "./serviceConfiguration";
-import {ServiceError} from "./serviceError";
-import {DefaultServiceInstanceProviderImpl, ServiceInstanceProvider} from "./serviceInstanceProvider";
-import {KnownServiceLifecycleControllers, ServiceLifecycleController} from "./serviceLifecycleController";
+import {Service} from "./service.js";
+import {EMPTY_SERVICE_CONFIGURATION, ServiceConfiguration} from "./serviceConfiguration.js";
+import {ServiceError} from "./serviceError.js";
+import {DefaultServiceInstanceProviderImpl, ServiceInstanceProvider} from "./serviceInstanceProvider.js";
+import {KnownServiceLifecycleControllers, ServiceLifecycleController} from "./serviceLifecycleController.js";
 
 /**
  * Defines a Service Manager Strategy that controls the behavior of the ServiceManager

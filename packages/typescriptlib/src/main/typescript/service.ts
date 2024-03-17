@@ -1,4 +1,4 @@
-import {ServiceConfiguration} from './serviceConfiguration';
+import {ServiceConfiguration} from './serviceConfiguration.js';
 
 /**
  * A Service is a predefined component of functionality with a lifecycle

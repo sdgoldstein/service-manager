@@ -1,7 +1,7 @@
-import {Service} from "./service";
-import {EMPTY_SERVICE_CONFIGURATION, ServiceConfiguration} from "./serviceConfiguration";
-import {ServiceError} from "./serviceError";
-import {ServiceInstanceProvider} from "./serviceInstanceProvider";
+import {Service} from "./service.js";
+import {EMPTY_SERVICE_CONFIGURATION, ServiceConfiguration} from "./serviceConfiguration.js";
+import {ServiceError} from "./serviceError.js";
+import {ServiceInstanceProvider} from "./serviceInstanceProvider.js";
 
 /**
  * ServiceLifecycleController is responsible for provide a control proxy to the Service.

@@ -1,4 +1,4 @@
-import {Service} from './service';
+import {Service} from './service.js';
 
 /**
  * A ServiceInstanceProvider creates a single instance of a service.

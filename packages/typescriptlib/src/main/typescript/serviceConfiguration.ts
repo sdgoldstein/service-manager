@@ -1,36 +1,23 @@
-import {GuardedMap} from '@sphyrna/tscore';
 
 /**
- * A type defintion representing the value of a config parameter
+ * A type definition representing the value of a config parameters.  Restricting for now.  This may open up in the
+ * future
  */
-type ConfigValue = number|string|boolean|number[]|boolean[]|string[];
-
-/**
- * A configuration for a service.  Provides a named set of properties
- */
-interface ServiceConfiguration
-{
-    propertyMap: GuardedMap<string, ConfigValue>;
+type ConfigValue = number|string|boolean|number[]|boolean[]|string[]|JSON;
+type OnlyConfigParams = {
+    readonly [key: string]: ConfigValue;
 }
-
 /**
- * A default service configuration implementation that accepts a map of
- * properties in its constructor
+ * A configuration for a service.  This interface reserves the ability for the framework to add configuration values for
+ * all services in the future
  */
-class DefaultServiceConfigurationImpl implements ServiceConfiguration
-{
-    propertyMap: GuardedMap<string, ConfigValue>;
-
-    constructor(properties: GuardedMap<string, any>)
-    {
-        this.propertyMap = properties;
-    }
+interface ServiceConfiguration extends OnlyConfigParams {
 }
 
 /**
  * An empty service configuration available for convenience
  */
-const EMPTY_SERVICE_CONFIGURATION: ServiceConfiguration = new DefaultServiceConfigurationImpl(new Map<string, any>());
+const EMPTY_SERVICE_CONFIGURATION: ServiceConfiguration = {};
 
-export {DefaultServiceConfigurationImpl, EMPTY_SERVICE_CONFIGURATION};
+export {EMPTY_SERVICE_CONFIGURATION};
 export type {ServiceConfiguration};
