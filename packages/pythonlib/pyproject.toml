@@ -2,12 +2,15 @@
 name = "service-manager"
 version = "0.1.0"
 description = "Serivce Manager is"
-authors = ["Your Name <you@example.com>"]
+authors = ["Scott Goldstein <sgoldstein@apache.org>"]
 readme = "README.md"
 packages = [{include = "src/main/python/service_manager"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.1.1"
 
 [build-system]
 requires = ["poetry-core"]
@@ -15,3 +18,8 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.mypy]
 strict=true
+
+[tool.pytest.ini_options]
+testpaths = [
+    "src/test/python/**/*_test.py"
+]

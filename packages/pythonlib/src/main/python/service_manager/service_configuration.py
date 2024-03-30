@@ -1,3 +1,7 @@
+"""
+This module defines types and functions related to service configuration
+"""
+
 from typing import TypeVar, Mapping
 from abc import ABC, abstractmethod
 
@@ -7,9 +11,11 @@ ConfigValue = TypeVar("ConfigValue", int, float, str, bool)
 class ServiceConfiguration(ABC):
     """A configuration for a service.  Provides a named set of properties"""
 
-    @property
     @abstractmethod
-    def popertyMap(self) -> Mapping[str, ConfigValue]:
+    def poperty_map(self) -> Mapping[str, ConfigValue]:
+        """
+        Retrieve the configuration parameters for the service
+        """
         pass
 
 
@@ -20,14 +26,13 @@ class DefaultServiceConfigurationImpl(ServiceConfiguration):
     """
 
     def __init__(self, properties: Mapping[str, ConfigValue]):
-        self._propertyMap: Mapping[str, ConfigValue] = properties
+        self._property_map: Mapping[str, ConfigValue] = properties
 
-    @property
-    def popertyMap(self) -> Mapping[str, ConfigValue]:
-        return self._propertyMap
+    def poperty_map(self) -> Mapping[str, ConfigValue]:
+        return self._property_map
 
 
 """
   An empty service configuration available for convenience
- """
+"""
 EMPTY_SERVICE_CONFIGURATION: ServiceConfiguration = DefaultServiceConfigurationImpl({})

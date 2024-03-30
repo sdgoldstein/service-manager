@@ -1,12 +1,12 @@
-from typing import Generic, TypeVar
+from typing import TypeVar
 from abc import ABC, abstractmethod
+from service_configuration import ServiceConfiguration
 
-C = TypeVar("C", bound=ServiceConfiguration)
+CConfiguration = TypeVar("CConfiguration", bound="ServiceConfiguration")
+TService = TypeVar("TService", bound="Service")
 
-
-class Service(Generic[C], ABC):
+class Service[CConfiguration](ABC):
     """A Service is a predefined component of functionality with a lifecycle managed by the ServiceManger."""
-
     @abstractmethod
     def init(self, configuration: C) -> None:
         """Initialize the service instance
@@ -31,7 +31,7 @@ class Service(Generic[C], ABC):
         pass
 
 
-class BaseService(Generic[C], Service):
+class BaseService[CConfiguration](Service):
     """Base instance of a Service which is a noop for all methods.  Extend to create a new service and implement the methods that are required"""
 
     def init(self, configuration: C) -> None:
@@ -45,3 +45,9 @@ class BaseService(Generic[C], Service):
 
     def destroy(self) -> None:
         pass
+
+class ServiceException(Exception):
+    """
+    Service API Exception
+    """
+    pass
