@@ -2,6 +2,15 @@
     "java.configuration.updateBuildConfiguration": "automatic",
     "cmake.configureOnOpen": false,
     "python.analysis.extraPaths": [
-        "./packages/pythonlib/src/main/python/service_manager"
+        "./packages/pythonlib/src/main/python/service_manager",
+        "./packages/pythonlib/src/test/python"
+    ],
+    "maven.view": "flat",
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "python.testing.autoTestDiscoverOnSaveEnabled": true,
+    "python.testing.cwd": "./packages/pythonlib/",
+    "pylint.args": [
+        "--rcfile=${workspaceFolder}/packages/pythonlib/.pylintrc"
     ]
 }

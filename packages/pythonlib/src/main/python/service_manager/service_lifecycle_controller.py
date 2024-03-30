@@ -59,10 +59,10 @@ class SingletonServiceLifecycleControllerImpl[TService, CConfiguration](
         self._config = config
 
     def get_service(self) -> TService:
-        if (not hasattr(self, "_singletonInstance")) or (
-            self._singletoneInstance is None
+        if (not hasattr(self, "_singleton_instance")) or (
+            self._singleton_instance is None
         ):
-            if (not hasattr(self, "_serviceInstanceProvider")) or (
+            if (not hasattr(self, "_service_instance_provider")) or (
                 self._service_instance_provider is None
             ):
                 raise ServiceException(
@@ -70,7 +70,7 @@ class SingletonServiceLifecycleControllerImpl[TService, CConfiguration](
                 )
 
             self._singleton_instance = (
-                self._service_instance_provider.createServiceInstance()
+                self._service_instance_provider.create_service_instance()
             )
             self._singleton_instance.init(self._config)
             self._singleton_instance.start()
@@ -78,8 +78,8 @@ class SingletonServiceLifecycleControllerImpl[TService, CConfiguration](
         return self._singleton_instance
 
     def shutdown(self) -> None:
-        if hasattr(self, "_singletonInstance") and (
-            self._singletoneInstance is not None
+        if hasattr(self, "_singleton_instance") and (
+            self._singleton_instance is not None
         ):
             self._singleton_instance.stop()
             self._singleton_instance.destroy()

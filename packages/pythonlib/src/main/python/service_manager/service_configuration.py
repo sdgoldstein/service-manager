@@ -31,5 +31,6 @@ class DefaultServiceConfigurationImpl(ServiceConfiguration):
         return self._property_map
 
 
-#  An empty service configuration available for convenience
+# An empty service configuration available for convenience
+# pylint: disable=unused-variable
 EMPTY_SERVICE_CONFIGURATION: ServiceConfiguration = DefaultServiceConfigurationImpl({})
