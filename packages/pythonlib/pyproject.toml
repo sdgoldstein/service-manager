@@ -23,3 +23,9 @@ strict=true
 testpaths = [
     "src/test/python/**/*_test.py"
 ]
+addopts = [
+    "--import-mode=importlib",
+]
+pythonpath = [
+    "src/main/python/service_manager"
+]

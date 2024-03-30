@@ -1,7 +1,13 @@
-from service import TService, CConfiguration, ServiceError
+"""
+This module defines types and functions related to a service lifecycle controller, 
+which is used to manage the lifecycle of a single service instance
+"""
+
+from abc import ABC, abstractmethod
 from service_instance_provider import ServiceInstanceProvider
 from service_configuration import EMPTY_SERVICE_CONFIGURATION
-from abc import ABC, abstractmethod
+from service import TService, CConfiguration, ServiceException
+
 
 class ServiceLifecycleController[TService, CConfiguration](ABC):
     """
@@ -11,64 +17,81 @@ class ServiceLifecycleController[TService, CConfiguration](ABC):
     """
 
     @abstractmethod
-    def init(self, serviceInstanceProvider: ServiceInstanceProvider[TService], config: CConfiguration)->None:
+    def init(
+        self,
+        service_instance_provider: ServiceInstanceProvider[TService],
+        config: CConfiguration,
+    ) -> None:
         """
         Register a service with the lifecycle controller.
-        @param serviceInstanceProvider the factory that will create class instances of the service class
+        @param serviceInstanceProvider the factory that will create class instances of the service
+               class
         @param config service level configuration
         """
-        pass
 
-    def shutdown(self)->None:
+    def shutdown(self) -> None:
         """
         Shutdown the service lifecycle and clean up
         """
-        pass
 
     @abstractmethod
-    def getService(self) -> TService:
+    def get_service(self) -> TService:
         """
         Retrieve a service instance
-     
+
         @return a service instance
         """
-        pass
 
 
-class SingletonServiceLifecycleControllerImpl[TService, CConfiguration](ServiceLifecycleController[TService, CConfiguration]):
+class SingletonServiceLifecycleControllerImpl[TService, CConfiguration](
+    ServiceLifecycleController[TService, CConfiguration]
+):
     """
     Lifecycle controller that creates singletons
     """
 
-    def init(self, serviceInstanceProvider: ServiceInstanceProvider[TService], config: CConfiguration)->None:
-        self._serviceInstanceProvider = serviceInstanceProvider;
-        self._config = config;
+    def init(
+        self,
+        service_instance_provider: ServiceInstanceProvider[TService],
+        config: CConfiguration,
+    ) -> None:
+        self._service_instance_provider = service_instance_provider
+        self._config = config
 
-    def getService(self) -> TService:
-        if (not hasattr(self, "_singletonInstance")) or (self._singletoneInstance is None):
-            if (not hasattr(self, "_serviceInstanceProvider")) or (self._serviceInstanceProvider is None):
-                raise ServiceError("Unexpected state. ServiceInstanceProvider not set");
-        
-            self._singletonInstance = self._serviceInstanceProvider.createServiceInstance();
-            self._singletonInstance.init(self._config);
-            self._singletonInstance.start();
+    def get_service(self) -> TService:
+        if (not hasattr(self, "_singletonInstance")) or (
+            self._singletoneInstance is None
+        ):
+            if (not hasattr(self, "_serviceInstanceProvider")) or (
+                self._service_instance_provider is None
+            ):
+                raise ServiceException(
+                    "Unexpected state. ServiceInstanceProvider not set"
+                )
 
-        return self._singletonInstance;
+            self._singleton_instance = (
+                self._service_instance_provider.createServiceInstance()
+            )
+            self._singleton_instance.init(self._config)
+            self._singleton_instance.start()
 
-    def shutdown(self)->None:
-        if hasattr(self, "_singletonInstance") and (self._singletoneInstance is not None):
-            self._singletonInstance.stop();
-            self._singletonInstance.destroy();
-            self._singletonInstance = None;
-        
-        self._config = EMPTY_SERVICE_CONFIGURATION;
-        self._serviceInstanceProvider = None;
+        return self._singleton_instance
+
+    def shutdown(self) -> None:
+        if hasattr(self, "_singletonInstance") and (
+            self._singletoneInstance is not None
+        ):
+            self._singleton_instance.stop()
+            self._singleton_instance.destroy()
+            self._singleton_instance = None
+
+        self._config = EMPTY_SERVICE_CONFIGURATION
+        self._service_instance_provider = None
+
 
 class KnownServiceLifecycleControllers:
     """
-    Known ServiceLifecycleController implementations.  
+    Known ServiceLifecycleController implementations.
     """
 
-    SINGLETON:type = SingletonServiceLifecycleControllerImpl
-
-
+    SINGLETON: type = SingletonServiceLifecycleControllerImpl

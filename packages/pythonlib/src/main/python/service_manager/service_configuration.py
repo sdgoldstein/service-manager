@@ -16,7 +16,6 @@ class ServiceConfiguration(ABC):
         """
         Retrieve the configuration parameters for the service
         """
-        pass
 
 
 class DefaultServiceConfigurationImpl(ServiceConfiguration):
@@ -32,7 +31,5 @@ class DefaultServiceConfigurationImpl(ServiceConfiguration):
         return self._property_map
 
 
-"""
-  An empty service configuration available for convenience
-"""
+#  An empty service configuration available for convenience
 EMPTY_SERVICE_CONFIGURATION: ServiceConfiguration = DefaultServiceConfigurationImpl({})

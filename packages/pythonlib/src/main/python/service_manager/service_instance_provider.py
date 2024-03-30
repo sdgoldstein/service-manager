@@ -1,7 +1,10 @@
-from service import Service, TService
+"""
+This module defines types and functions related to a service instance provider, 
+which is used to create an instance of a service class
+"""
 
-from typing import TypeVar, Mapping
 from abc import ABC, abstractmethod
+from service import TService
 
 
 class ServiceInstanceProvider[TService](ABC):
@@ -10,12 +13,10 @@ class ServiceInstanceProvider[TService](ABC):
     """
 
     @abstractmethod
-    def create_service_instance(self)->TService:
+    def create_service_instance(self) -> TService:
         """
         Create a Service instance
         """
-        pass
-
 
 
 class DefaultServiceInstanceProviderImpl[TService](ServiceInstanceProvider[TService]):
@@ -24,9 +25,11 @@ class DefaultServiceInstanceProviderImpl[TService](ServiceInstanceProvider[TServ
     create the service instance
     """
 
-    def __init__(self, serviceClass: type):
-        self.serviceClass = serviceClass
+    def __init__(self, service_class: type):
+        self.service_class = service_class
 
-    def create_service_instance(self)->TService:
-        return self.serviceClass()
-
+    def create_service_instance(self) -> TService:
+        """
+        Create an instance of the service class
+        """
+        return self.service_class()

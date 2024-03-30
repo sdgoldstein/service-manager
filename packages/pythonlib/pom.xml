@@ -49,6 +49,20 @@
                         </configuration>
                     </execution>
                     <execution>
+                        <id>pytest</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>poetry</executable>
+                            <arguments>
+                                <argument>run</argument>
+                                <argument>pytest</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>lint-with-mypy</id>
                         <phase>verify</phase>
                         <goals>
