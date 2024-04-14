@@ -21,9 +21,9 @@ class ServiceManager:
     _service_manager_strategy: ServiceManagerStrategy = ConfigServiceManagerStrategy()
 
     @classmethod
-    def getService[
-        TService, CConfiguration
-    ](name: str, config: CConfiguration = EMPTY_SERVICE_CONFIGURATION) -> TService:
+    def get_service(
+        cls, name: str, config: CConfiguration = EMPTY_SERVICE_CONFIGURATION
+    ) -> TService:
         """
         Retrieve a service.
 
@@ -31,9 +31,10 @@ class ServiceManager:
         configuration.  This must be supported by the associated
         ServiceLifecycleManager
         """
-        return ServiceManager._service_manager_strategy.get_service[TService](
-            name, config
-        )
+
+        # pylint isn't handling generics in the way I'm specifing them
+        # pylint: disable=E1136
+        return ServiceManager._service_manager_strategy.get_service(name, config)
 
     @classmethod
     def is_service_defined(cls, name: str) -> bool:
@@ -50,7 +51,7 @@ class ServiceManager:
         ServiceManager._service_manager_strategy.shutdown()
 
     @classmethod
-    def setDefaultStrategy(cls, strategyToSet: ServiceManagerStrategy) -> None:
+    def set_default_strategy(cls, strategy_to_set: ServiceManagerStrategy) -> None:
         """
         Set the service manager strategy.  This strategy will be used to retrieve services based on the algorithm defined
         in the ServiceManagerFactory implementnatation
@@ -60,4 +61,4 @@ class ServiceManager:
 
         @param strategyToSet the service manager strategy to set
         """
-        ServiceManager._service_manager_strategy = strategyToSet
+        ServiceManager._service_manager_strategy = strategy_to_set

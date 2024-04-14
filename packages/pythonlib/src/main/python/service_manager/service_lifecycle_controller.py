@@ -4,6 +4,8 @@ which is used to manage the lifecycle of a single service instance
 """
 
 from abc import ABC, abstractmethod
+from typing import ClassVar
+from typing_extensions import override
 from service_instance_provider import ServiceInstanceProvider
 from service_configuration import EMPTY_SERVICE_CONFIGURATION
 from service import TService, CConfiguration, ServiceException
@@ -43,6 +45,8 @@ class ServiceLifecycleController[TService, CConfiguration](ABC):
         """
 
 
+# pylint isn't handling generics in the way I'm specifing them
+# pylint: disable=E1136,unused-variable
 class SingletonServiceLifecycleControllerImpl[TService, CConfiguration](
     ServiceLifecycleController[TService, CConfiguration]
 ):
@@ -50,15 +54,28 @@ class SingletonServiceLifecycleControllerImpl[TService, CConfiguration](
     Lifecycle controller that creates singletons
     """
 
+    def __init__(self):
+        self._service_instance_provider = None
+        self._config = EMPTY_SERVICE_CONFIGURATION
+        self._singleton_instance = None
+
+    @override
     def init(
         self,
         service_instance_provider: ServiceInstanceProvider[TService],
         config: CConfiguration,
     ) -> None:
+        # Docstring on parent
+        # pylint: disable=missing-function-docstring
+
         self._service_instance_provider = service_instance_provider
         self._config = config
 
+    @override
     def get_service(self) -> TService:
+        # Docstring on parent
+        # pylint: disable=missing-function-docstring
+
         if (not hasattr(self, "_singleton_instance")) or (
             self._singleton_instance is None
         ):
@@ -77,7 +94,11 @@ class SingletonServiceLifecycleControllerImpl[TService, CConfiguration](
 
         return self._singleton_instance
 
+    @override
     def shutdown(self) -> None:
+        # Docstring on parent
+        # pylint: disable=missing-function-docstring
+
         if hasattr(self, "_singleton_instance") and (
             self._singleton_instance is not None
         ):
@@ -94,4 +115,4 @@ class KnownServiceLifecycleControllers:
     Known ServiceLifecycleController implementations.
     """
 
-    SINGLETON: type = SingletonServiceLifecycleControllerImpl
+    SINGLETON: ClassVar[type] = SingletonServiceLifecycleControllerImpl

@@ -8,10 +8,12 @@ packages = [{include = "src/main/python/service_manager"}]
 
 [tool.poetry.dependencies]
 python = "^3.12"
-pylint = "^3.1.0"
+typing-extensions = "^4.11.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.1.1"
+coverage = {extras = ["toml"], version = "^7.4.4"}
+pylint = "^3.1.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -31,3 +33,9 @@ pythonpath = [
     "src/main/python/service_manager",
     "src/test/python/service_manager"
 ]
+
+[tool.coverage.run]
+include = ["src/*"]
+
+[tool.coverage.report]
+fail_under = 90

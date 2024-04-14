@@ -1,19 +1,7 @@
-from abc import ABC, abstractmethod
-from typing import TypeVar
-
 from service_instance_provider import ServiceInstanceProvider
-from service import CConfiguration, TService
 from service_lifecycle_controller import ServiceLifecycleController
 
-
-class MockServiceInstanceProvider(ServiceInstanceProvider[TService]):
-    def __init__(self, mock_service: TService):
-        self.created_times = 0
-        self.mock_service = mock_service
-
-    def create_service_instance(self) -> TService:
-        self.created_times += 1
-        return self.mock_service
+from service import BaseService, CConfiguration, TService
 
 
 class MockServiceInstanceProvider(ServiceInstanceProvider[TService]):
@@ -24,6 +12,10 @@ class MockServiceInstanceProvider(ServiceInstanceProvider[TService]):
     def create_service_instance(self) -> TService:
         self.created_times += 1
         return self.mock_service
+
+
+class MockService(BaseService):
+    pass
 
 
 class MockServiceLifecycleController(
@@ -38,10 +30,10 @@ class MockServiceLifecycleController(
         service_instance_provider: ServiceInstanceProvider[TService],
         config: CConfiguration,
     ) -> None:
-        raise NotImplementedError("Method not implemented.")
+        pass
 
     def shutdown(self) -> None:
-        raise NotImplementedError("Method not implemented.")
+        pass
 
     def get_service(self) -> TService:
-        raise NotImplementedError("Method not implemented.")
+        pass

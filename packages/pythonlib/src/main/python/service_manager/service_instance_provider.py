@@ -19,7 +19,9 @@ class ServiceInstanceProvider[TService](ABC):
         """
 
 
-class DefaultServiceInstanceProviderImpl[TService](ServiceInstanceProvider[TService]):
+# pylint isn't handling generics in the way I'm specifing them
+# pylint: disable=E1136,unused-variable
+class DefaultServiceInstanceProviderImpl(ServiceInstanceProvider[TService]):
     """
     DefaultServiceInstanceProviderImpl is a service provider that simply invokes the provided service constructor to
     create the service instance

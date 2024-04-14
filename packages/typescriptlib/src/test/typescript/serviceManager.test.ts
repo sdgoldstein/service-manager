@@ -26,3 +26,9 @@ test("setDefaultStrategy/isServiceDefined", () => {
 })
 
 test("setDefaultStrategy should set the default strategy", () => { ServiceManager.setDefaultStrategy(mockStrategy); })
+
+test("shutdown", () => {
+    ServiceManager.setDefaultStrategy(mockStrategy);
+    ServiceManager.shutdown();
+    expect(mockStrategy.shutdown).toBeCalled();
+})

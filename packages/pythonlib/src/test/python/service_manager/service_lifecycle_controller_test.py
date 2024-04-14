@@ -1,17 +1,16 @@
+"""
+    Test thje service_lifecycle_controller module
+"""
+
 from unittest.mock import Mock
 import pytest
 from service_framework_test_utils import MockServiceInstanceProvider
-from service import BaseService, ServiceException
 from service_configuration import DefaultServiceConfigurationImpl
 from service_lifecycle_controller import SingletonServiceLifecycleControllerImpl
+from service import BaseService, ServiceException
 
 
-@pytest.fixture(scope="class")
-def setup_mock_service():
-    pass
-
-
-class TestSingonServiceLifecycleControllerImpl:
+class TestSingletonServiceLifecycleControllerImpl:
     """
     Test SingonServiceLifecycleControllerImpl
     """
@@ -37,7 +36,7 @@ class TestSingonServiceLifecycleControllerImpl:
             self.__class__.mock_service
         )
 
-    def test_initialize_and_start(self, setup_mock_service):
+    def test_initialize_and_start(self):
         """
         Test the initialize and start methods
         """

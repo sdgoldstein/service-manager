@@ -58,7 +58,26 @@
                             <executable>poetry</executable>
                             <arguments>
                                 <argument>run</argument>
+                                <argument>coverage</argument>
+                                <argument>run</argument>
+                                <argument>-m</argument>
                                 <argument>pytest</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>coverge_report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>poetry</executable>
+                            <arguments>
+                                <argument>run</argument>
+                                <argument>coverage</argument>
+                                <argument>report</argument>
+                                <argument>-m</argument>
                             </arguments>
                         </configuration>
                     </execution>

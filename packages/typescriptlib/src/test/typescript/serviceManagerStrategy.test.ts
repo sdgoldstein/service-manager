@@ -45,6 +45,7 @@ describe("DefaultServiceManagerStrategyImpl", () => {
         expect(mockServiceLifecycleController.getService).toHaveBeenCalled();
 
         // register a service with config
+        mockReset(mockServiceLifecycleController);
         const serviceNameTwo = "serviceNameTwo";
         strategyToTest.registerService(serviceNameTwo, mockServiceInstanceProvider, mockServiceLifecycleController,
                                        testServiceConfiguration);
@@ -142,11 +143,10 @@ describe("DefaultServiceManagerStrategyImpl", () => {
         const serviceNameTwo = "serviceNameTwo";
         strategyToTest.registerServiceByClass(serviceNameTwo, MockService, MockServiceLifecycleController,
                                               testServiceConfiguration);
-        expect(strategyToTest.isServiceDefined(serviceNameOne)).toStrictEqual(true);
+        expect(strategyToTest.isServiceDefined(serviceNameTwo)).toStrictEqual(true);
         strategyToTest.getService(serviceNameTwo);
 
         // Override a service
-        mockReset(mockServiceLifecycleController);
         strategyToTest.registerServiceByClass(serviceNameOne, MockService, MockServiceLifecycleController,
                                               testServiceConfiguration, true);
         expect(strategyToTest.isServiceDefined(serviceNameOne)).toStrictEqual(true);

@@ -23,16 +23,14 @@ class ServiceManagerStrategy(ABC):
     """
 
     @abstractmethod
-    def get_service[
-        TService, CConfiguration
-    ](
+    def get_service(
         self, name: str, config: CConfiguration = EMPTY_SERVICE_CONFIGURATION
     ) -> TService:
         """
         Retrieve a service.
 
         An Optional config may be supplied for service instance level
-        configuration.  self must be supported by the associated
+        configuration.  This must be supported by the associated
         ServiceLifecycleManager
         """
 
@@ -54,12 +52,14 @@ class ServiceDefinition[TService]:
     Internal class
     """
 
+    # pylint isn't handling generics in the way I'm specifing them
+    # pylint: disable=E1136
     def __init__(
         self,
-        service_lifecycle_controller: ServiceLifecycleController[TService],
-        service_instance_provider: ServiceInstanceProvider[
-            TService
-        ] = DefaultServiceInstanceProviderImpl[TService](),
+        service_lifecycle_controller: ServiceLifecycleController[
+            TService, CConfiguration
+        ],
+        service_instance_provider: ServiceInstanceProvider[TService] = None,
         config: ServiceConfiguration = EMPTY_SERVICE_CONFIGURATION,
     ):
         self.service_lifecycle_controller = service_lifecycle_controller
@@ -69,9 +69,8 @@ class ServiceDefinition[TService]:
     def has_service_instance_provider(self) -> bool:
         """
         Check if the instance provider has been defined for this ServiceDefinition
-        FIXME - is the service instance provider always defined?
         """
-        return (hasattr(self, "_serviceInstanceProvider")) and (
+        return (hasattr(self, "_service_instance_provider")) and (
             self._service_instance_provider is not None
         )
 
@@ -95,14 +94,12 @@ class DefaultServiceManagerStrategyImpl(ServiceManagerStrategy):
     """
 
     def __init__(self):
-        self._controllers_for_active_services = Dict[
-            str, ServiceLifecycleController[TService]
-        ]()
-        self._service_definitions = Dict[str, ServiceDefinition[TService]]
+        self._controllers_for_active_services: Dict[
+            str, ServiceLifecycleController[TService, CConfiguration]
+        ] = {}
+        self._service_definitions: Dict[str, ServiceDefinition[TService]] = {}
 
-    def register_service_by_controller_only[
-        TService, CConfiguration
-    ](
+    def register_service_by_controller_only(
         self,
         name: str,
         service_lifecycle_controller: ServiceLifecycleController[
@@ -135,9 +132,7 @@ class DefaultServiceManagerStrategyImpl(ServiceManagerStrategy):
         )
         self._service_definitions[name] = service_definition
 
-    def register_service[
-        TService, CConfiguration
-    ](
+    def register_service(
         self,
         name: str,
         service_instance_provider: ServiceInstanceProvider[TService],
@@ -156,9 +151,7 @@ class DefaultServiceManagerStrategyImpl(ServiceManagerStrategy):
         self._service_definitions[name] = service_definition
 
     # FIXME - type as it's used here isn't strong enough.
-    def register_service_by_class[
-        TService, CConfiguration
-    ](
+    def register_service_by_class(
         self,
         name: str,
         service_class: type,
@@ -191,9 +184,7 @@ class DefaultServiceManagerStrategyImpl(ServiceManagerStrategy):
             name, service_provider, service_lifecycle_controller, config, override
         )
 
-    def register_singleton_service[
-        TService, CConfiguration
-    ](
+    def register_singleton_service(
         self,
         name: str,
         service_class: type,
@@ -223,9 +214,7 @@ class DefaultServiceManagerStrategyImpl(ServiceManagerStrategy):
             override,
         )
 
-    def get_service[
-        TService, CConfiguration
-    ](
+    def get_service(
         self, name: str, config: CConfiguration = EMPTY_SERVICE_CONFIGURATION
     ) -> TService:
 
@@ -247,7 +236,7 @@ class DefaultServiceManagerStrategyImpl(ServiceManagerStrategy):
 
             if service_definition.has_service_instance_provider():
                 service_lifecycle_controller.init(
-                    service_definition.serviceInstanceProvider,
+                    service_definition.get_service_instance_provider(),
                     service_definition.service_configuration,
                 )
 
@@ -259,7 +248,7 @@ class DefaultServiceManagerStrategyImpl(ServiceManagerStrategy):
         return name in self._service_definitions
 
     def shutdown(self) -> None:
-        for next_service_controller in self._controllers_for_active_services:
+        for next_service_controller in self._controllers_for_active_services.values():
             next_service_controller.shutdown()
 
         self._controllers_for_active_services.clear()
