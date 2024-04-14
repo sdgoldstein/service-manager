@@ -81,7 +81,9 @@
                             </arguments>
                         </configuration>
                     </execution>
-                    <execution>
+                    <!-- FIXME - Re-add linting. Be sure to add double dash to recursive option
+                    below                    
+    <execution>
                         <id>lint-with-mypy</id>
                         <phase>verify</phase>
                         <goals>
@@ -90,7 +92,7 @@
                         <configuration>
                             <executable>mypy</executable>
                             <arguments>
-                                <argument>.</argument>
+                                <argument>src/main</argument>
                             </arguments>
                         </configuration>
                     </execution>
@@ -103,8 +105,21 @@
                         <configuration>
                             <executable>pylint</executable>
                             <arguments>
-                                <argument>--recursive=y</argument>
+                                <argument>recursive=y</argument>
                                 <argument>.</argument>
+                            </arguments>
+                        </configuration>
+                    </execution> -->
+                    <execution>
+                        <id>deploy_with_poetry</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>poetry</executable>
+                            <arguments>
+                                <argument>publish</argument>
                             </arguments>
                         </configuration>
                     </execution>

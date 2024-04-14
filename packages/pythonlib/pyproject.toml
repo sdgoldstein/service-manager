@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "service-manager"
-version = "0.1.0"
-description = "Serivce Manager is"
+name = "service_manager"
+version = "0.2.0"
+description = "Python implementation of a service manager framework"
 authors = ["Scott Goldstein <sgoldstein@apache.org>"]
 readme = "README.md"
 packages = [{include = "src/main/python/service_manager"}]
@@ -14,6 +14,7 @@ typing-extensions = "^4.11.0"
 pytest = "^8.1.1"
 coverage = {extras = ["toml"], version = "^7.4.4"}
 pylint = "^3.1.0"
+mypy = "^1.9.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -21,6 +22,10 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.mypy]
 strict=true
+mypy_path = [
+    "src/main/python/service_manager",
+    "src/test/python/service_manager"
+]
 
 [tool.pytest.ini_options]
 testpaths = [
