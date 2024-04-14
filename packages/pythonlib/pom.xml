@@ -81,9 +81,8 @@
                             </arguments>
                         </configuration>
                     </execution>
-                    <!-- FIXME - Re-add linting. Be sure to add double dash to recursive option
-                    below                    
-    <execution>
+                    <!-- FIXME - add back when mypy supports pyton 3.12 better
+                        <execution>
                         <id>lint-with-mypy</id>
                         <phase>verify</phase>
                         <goals>
@@ -92,10 +91,10 @@
                         <configuration>
                             <executable>mypy</executable>
                             <arguments>
-                                <argument>src/main</argument>
+                                <argument>src/main/python/service_manager</argument>
                             </arguments>
                         </configuration>
-                    </execution>
+                    </execution> -->
                     <execution>
                         <id>lint-with-pylint</id>
                         <phase>verify</phase>
@@ -105,11 +104,10 @@
                         <configuration>
                             <executable>pylint</executable>
                             <arguments>
-                                <argument>recursive=y</argument>
-                                <argument>.</argument>
+                                <argument>src/main/python/service_manager</argument>
                             </arguments>
                         </configuration>
-                    </execution> -->
+                    </execution>
                     <execution>
                         <id>deploy_with_poetry</id>
                         <phase>deploy</phase>

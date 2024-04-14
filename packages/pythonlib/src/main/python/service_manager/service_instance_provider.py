@@ -4,16 +4,17 @@ which is used to create an instance of a service class
 """
 
 from abc import ABC, abstractmethod
-from service import TService
+from service import ServiceT
 
 
-class ServiceInstanceProvider[TService](ABC):
+# mypy does not yet support PEP 695 generics
+class ServiceInstanceProvider[ServiceT](ABC):  # type: ignore[valid-type]
     """
     A ServiceInstanceProvider creates a single instance of a service.
     """
 
     @abstractmethod
-    def create_service_instance(self) -> TService:
+    def create_service_instance(self) -> ServiceT:
         """
         Create a Service instance
         """
@@ -21,7 +22,7 @@ class ServiceInstanceProvider[TService](ABC):
 
 # pylint isn't handling generics in the way I'm specifing them
 # pylint: disable=E1136,unused-variable
-class DefaultServiceInstanceProviderImpl(ServiceInstanceProvider[TService]):
+class DefaultServiceInstanceProviderImpl(ServiceInstanceProvider[ServiceT]):
     """
     DefaultServiceInstanceProviderImpl is a service provider that simply invokes the provided service constructor to
     create the service instance
@@ -30,7 +31,7 @@ class DefaultServiceInstanceProviderImpl(ServiceInstanceProvider[TService]):
     def __init__(self, service_class: type):
         self.service_class = service_class
 
-    def create_service_instance(self) -> TService:
+    def create_service_instance(self) -> ServiceT:
         """
         Create an instance of the service class
         """

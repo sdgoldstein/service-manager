@@ -8,7 +8,7 @@ from service_manager_strategy import (
     ServiceManagerStrategy,
     ConfigServiceManagerStrategy,
 )
-from service import TService, CConfiguration
+from service import ServiceT, ConfigurationT
 
 
 class ServiceManager:
@@ -22,8 +22,8 @@ class ServiceManager:
 
     @classmethod
     def get_service(
-        cls, name: str, config: CConfiguration = EMPTY_SERVICE_CONFIGURATION
-    ) -> TService:
+        cls, name: str, config: ConfigurationT = EMPTY_SERVICE_CONFIGURATION
+    ) -> ServiceT:
         """
         Retrieve a service.
 
@@ -53,8 +53,8 @@ class ServiceManager:
     @classmethod
     def set_default_strategy(cls, strategy_to_set: ServiceManagerStrategy) -> None:
         """
-        Set the service manager strategy.  This strategy will be used to retrieve services based on the algorithm defined
-        in the ServiceManagerFactory implementnatation
+        Set the service manager strategy.  This strategy will be used to retrieve services
+        based on the algorithm defined in the ServiceManagerFactory implementnatation
 
         In the future, a ServiceManager may be able to use multiple strategies concurrently.  As of the current API, it
         only supports a single strategy

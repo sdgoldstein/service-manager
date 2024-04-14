@@ -23,8 +23,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.mypy]
 strict=true
 mypy_path = [
-    "src/main/python/service_manager",
-    "src/test/python/service_manager"
+    "src/main/python/service_manager"
 ]
 
 [tool.pytest.ini_options]

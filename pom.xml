@@ -17,45 +17,11 @@
         <module>packages/pythonlib</module>
     </modules>
 
-    <!-- FIXME -->
     <scm>
-        <connection>scm:git:git@bitbucket.org:sgoldstein/service.git</connection>
-        <developerConnection>scm:git:git@bitbucket.org:sgoldstein/service.git</developerConnection>
+        <connection>scm:git:https://github.com/sdgoldstein/service-manager.git</connection>
+        <developerConnection>scm:git:https://github.com/sdgoldstein/service-manager.git</developerConnection>
         <tag>0.211</tag>
     </scm>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>synergian-repo</id>
-            <url>https://raw.github.com/synergian/wagon-git/releases</url>
-        </pluginRepository>
-    </pluginRepositories>
-    <distributionManagement>
-        <repository>
-            <id>Release_Artifact_Repository</id>
-            <name>Realeses Artifact Respository</name>
-            <url>git:releases://git@bitbucket.org:sgoldstein/artifact_repository.git</url>
-        </repository>
-        <snapshotRepository>
-            <id>Snapshots_Artifact_Repository</id>
-            <name>Snapshots Artifact_Respository</name>
-            <url>git:snapshots://git@bitbucket.org:sgoldstein/artifact_repository.git</url>
-        </snapshotRepository>
-    </distributionManagement>
-    <repositories>
-        <repository>
-            <id>Artifact_Repository</id>
-            <name>Artifact Repository</name>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <!--                            distributionManagement url was
-            <url>git:your-branch://git@bitbucket.org:yourbitbucketusername/your-bitbucket-repo.git</url>                        -->
-            <url>https://api.bitbucket.org/1.0/repositories/sgoldstein/artifact_repository</url>
-        </repository>
-    </repositories>
 
     <build>
         <plugins>
@@ -69,13 +35,5 @@
                 </configuration>
             </plugin>
         </plugins>
-
-        <extensions>
-            <extension>
-                <groupId>ar.com.synergian</groupId>
-                <artifactId>wagon-git</artifactId>
-                <version>0.2.5</version>
-            </extension>
-        </extensions>
     </build>
 </project>

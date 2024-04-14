@@ -4,14 +4,15 @@ which is used to manage the lifecycle of a single service instance
 """
 
 from abc import ABC, abstractmethod
-from typing import ClassVar
+from typing import Final
 from typing_extensions import override
 from service_instance_provider import ServiceInstanceProvider
 from service_configuration import EMPTY_SERVICE_CONFIGURATION
-from service import TService, CConfiguration, ServiceException
+from service import ServiceT, ConfigurationT, ServiceException
 
 
-class ServiceLifecycleController[TService, CConfiguration](ABC):
+# mypy does not yet support PEP 695 generics
+class ServiceLifecycleController[ServiceT, ConfigurationT](ABC):  # type: ignore[valid-type]
     """
     ServiceLifecycleController is responsible for provide a control proxy to the Service.
     It's invoked by the ServiceManager to create, initialize, start, stop, and
@@ -21,8 +22,8 @@ class ServiceLifecycleController[TService, CConfiguration](ABC):
     @abstractmethod
     def init(
         self,
-        service_instance_provider: ServiceInstanceProvider[TService],
-        config: CConfiguration,
+        service_instance_provider: ServiceInstanceProvider[ServiceT],
+        config: ConfigurationT,
     ) -> None:
         """
         Register a service with the lifecycle controller.
@@ -37,7 +38,7 @@ class ServiceLifecycleController[TService, CConfiguration](ABC):
         """
 
     @abstractmethod
-    def get_service(self) -> TService:
+    def get_service(self) -> ServiceT:
         """
         Retrieve a service instance
 
@@ -46,9 +47,10 @@ class ServiceLifecycleController[TService, CConfiguration](ABC):
 
 
 # pylint isn't handling generics in the way I'm specifing them
+# mypy does not yet support PEP 695 generics
 # pylint: disable=E1136,unused-variable
-class SingletonServiceLifecycleControllerImpl[TService, CConfiguration](
-    ServiceLifecycleController[TService, CConfiguration]
+class SingletonServiceLifecycleControllerImpl[ServiceT, ConfigurationT](  # type: ignore[valid-type]
+    ServiceLifecycleController[ServiceT, ConfigurationT]
 ):
     """
     Lifecycle controller that creates singletons
@@ -62,8 +64,8 @@ class SingletonServiceLifecycleControllerImpl[TService, CConfiguration](
     @override
     def init(
         self,
-        service_instance_provider: ServiceInstanceProvider[TService],
-        config: CConfiguration,
+        service_instance_provider: ServiceInstanceProvider[ServiceT],
+        config: ConfigurationT,
     ) -> None:
         # Docstring on parent
         # pylint: disable=missing-function-docstring
@@ -72,7 +74,7 @@ class SingletonServiceLifecycleControllerImpl[TService, CConfiguration](
         self._config = config
 
     @override
-    def get_service(self) -> TService:
+    def get_service(self) -> ServiceT:
         # Docstring on parent
         # pylint: disable=missing-function-docstring
 
@@ -115,4 +117,4 @@ class KnownServiceLifecycleControllers:
     Known ServiceLifecycleController implementations.
     """
 
-    SINGLETON: ClassVar[type] = SingletonServiceLifecycleControllerImpl
+    SINGLETON: Final[type] = SingletonServiceLifecycleControllerImpl

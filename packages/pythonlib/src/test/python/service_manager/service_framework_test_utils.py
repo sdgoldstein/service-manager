@@ -5,19 +5,19 @@
 from service_instance_provider import ServiceInstanceProvider
 from service_lifecycle_controller import ServiceLifecycleController
 
-from service import BaseService, CConfiguration, TService
+from service import BaseService, ConfigurationT, ServiceT
 
 
-class MockServiceInstanceProvider(ServiceInstanceProvider[TService]):
+class MockServiceInstanceProvider(ServiceInstanceProvider[ServiceT]):
     """
     Mock Service Instance Provider
     """
 
-    def __init__(self, mock_service: TService):
+    def __init__(self, mock_service: ServiceT):
         self.created_times = 0
         self.mock_service = mock_service
 
-    def create_service_instance(self) -> TService:
+    def create_service_instance(self) -> ServiceT:
         self.created_times += 1
         return self.mock_service
 
@@ -31,7 +31,7 @@ class MockService(BaseService):
 
 
 class MockServiceLifecycleController(
-    ServiceLifecycleController[TService, CConfiguration]
+    ServiceLifecycleController[ServiceT, ConfigurationT]
 ):
     """
     Mock Service Lifecycle Manager
@@ -43,13 +43,13 @@ class MockServiceLifecycleController(
 
     def init(
         self,
-        service_instance_provider: ServiceInstanceProvider[TService],
-        config: CConfiguration,
+        service_instance_provider: ServiceInstanceProvider[ServiceT],
+        config: ConfigurationT,
     ) -> None:
         pass
 
     def shutdown(self) -> None:
         pass
 
-    def get_service(self) -> TService:
+    def get_service(self) -> ServiceT:
         pass
