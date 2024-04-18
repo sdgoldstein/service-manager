@@ -2,9 +2,9 @@
     "java.configuration.updateBuildConfiguration": "automatic",
     "cmake.configureOnOpen": false,
     "python.analysis.extraPaths": [
-        "./packages/pythonlib/src/main/python/service_manager",
+        "./packages/pythonlib/src/main/python",
         "./packages/pythonlib/src/test/python",
-        "./packages/pythonlib/src/test/python/service_manager"
+        "./packages/pythonlib/src/test/python/sphyrna/service_manager"
     ],
     "maven.view": "flat",
     "python.testing.unittestEnabled": false,

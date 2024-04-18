@@ -1,10 +1,10 @@
 [tool.poetry]
-name = "service_manager"
-version = "0.2.0"
+name = "sphyrna-service-manager"
+version = "0.3.0"
 description = "Python implementation of a service manager framework"
 authors = ["Scott Goldstein <sgoldstein@apache.org>"]
 readme = "README.md"
-packages = [{include = "src/main/python/service_manager"}]
+packages = [{include = "src/main/python/sphyrna"}]
 
 [tool.poetry.dependencies]
 python = "^3.12"
@@ -23,7 +23,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.mypy]
 strict=true
 mypy_path = [
-    "src/main/python/service_manager"
+    "src/main/python/sphyrna"
 ]
 
 [tool.pytest.ini_options]
@@ -34,8 +34,8 @@ addopts = [
     "--import-mode=importlib",
 ]
 pythonpath = [
-    "src/main/python/service_manager",
-    "src/test/python/service_manager"
+    "src/main/python/sphyrna",
+    "src/test/python/sphyrna"
 ]
 
 [tool.coverage.run]
