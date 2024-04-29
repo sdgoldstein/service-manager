@@ -1,9 +1,0 @@
-/Users/kameleon/Code/service/packages/javalib/src/test/java/com/lifeease/pim/service/TestServiceManagerFactory.java
-/Users/kameleon/Code/service/packages/javalib/src/test/java/com/lifeease/pim/service/providers/TestSingletonServiceProvider.java
-/Users/kameleon/Code/service/packages/javalib/src/test/java/com/lifeease/pim/service/TestMapConfiguration.java
-/Users/kameleon/Code/service/packages/javalib/src/test/java/com/lifeease/pim/service/TestServiceException.java
-/Users/kameleon/Code/service/packages/javalib/src/test/java/com/lifeease/pim/service/defaultimpl/TestServiceManagerImpl.java
-/Users/kameleon/Code/service/packages/javalib/src/test/java/com/lifeease/pim/service/TestInvalidServiceDefinitionException.java
-/Users/kameleon/Code/service/packages/javalib/src/test/java/com/lifeease/pim/service/providers/MockSimpleService.java
-/Users/kameleon/Code/service/packages/javalib/src/test/java/com/lifeease/pim/service/ServiceTestSuite.java
-/Users/kameleon/Code/service/packages/javalib/src/test/java/com/lifeease/pim/service/TestServiceNotAvailableException.java
