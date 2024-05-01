@@ -3,8 +3,6 @@ import {ServiceConfiguration} from './serviceConfiguration.js';
 /**
  * A Service is a predefined component of functionality with a lifecycle
  * managed by the ServiceManger.
- *
- * @author sgoldstein
  */
 interface Service<C extends ServiceConfiguration = ServiceConfiguration>
 {
