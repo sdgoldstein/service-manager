@@ -3,6 +3,7 @@ package com.sphyrna.servicemanager.providers;
 import com.sphyrna.servicemanager.ServiceConfiguration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * A default implementation of the {@link ServiceConfiguration}
@@ -22,10 +23,7 @@ public class MapConfiguration implements ServiceConfiguration
     @Override
     public Object getProperty(String name)
     {
-        if (name == null)
-        {
-            throw new IllegalArgumentException("name cannot be null");
-        }
+        Objects.requireNonNull(name, "name cannot be null");
 
         if (!this.properties.containsKey(name))
         {
@@ -37,15 +35,8 @@ public class MapConfiguration implements ServiceConfiguration
 
     public void setProperty(String name, Object value)
     {
-        if (name == null)
-        {
-            throw new IllegalArgumentException("name cannot be null");
-        }
-
-        if (value == null)
-        {
-            throw new IllegalArgumentException("value cannot be null");
-        }
+        Objects.requireNonNull(name, "name cannot be null");
+        Objects.requireNonNull(value, "name cannot be value");
 
         this.properties.put(name, value);
     }
@@ -53,10 +44,7 @@ public class MapConfiguration implements ServiceConfiguration
     @Override
     public boolean containsProperty(String name)
     {
-        if (name == null)
-        {
-            throw new IllegalArgumentException("name cannot be null");
-        }
+        Objects.requireNonNull(name, "name cannot be null");
 
         return this.properties.containsKey(name);
     }

@@ -2,13 +2,12 @@ package com.sphyrna.servicemanager.defaultimpl;
 
 import com.sphyrna.servicemanager.*;
 import com.sphyrna.servicemanager.providers.KnownServiceLifecycleControllers;
-import com.sphyrna.servicemanager.providers.MapConfiguration;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -29,6 +28,8 @@ public class ServiceManagerStrategyImpl implements ServiceManagerStrategy
     @Override
     public <S extends Service> S getService(String name) throws ServiceException
     {
+        Objects.requireNonNull(name, "name cannot be null");
+
         return this.<S, ServiceConfiguration>getService(name, ServiceManagerConstants.EMPTY_SERVICE_CONFIGURATION);
     }
 
@@ -36,10 +37,8 @@ public class ServiceManagerStrategyImpl implements ServiceManagerStrategy
     public <S extends Service<C>, C extends ServiceConfiguration> S getService(String name, C serviceConfiguration)
         throws ServiceException
     {
-        if (name == null)
-        {
-            throw new IllegalArgumentException("name cannot be null.");
-        }
+        Objects.requireNonNull(name, "name cannot be null");
+        Objects.requireNonNull(serviceConfiguration, "serviceConfiguration cannot be null");
 
         if (!SERVICE_DEFINITIONS.containsKey(name))
         {
@@ -75,10 +74,7 @@ public class ServiceManagerStrategyImpl implements ServiceManagerStrategy
     @Override
     public boolean isServiceDefined(String name)
     {
-        if (name == null)
-        {
-            throw new IllegalArgumentException("name cannot be null.");
-        }
+        Objects.requireNonNull(name, "name cannot be null");
 
         return SERVICE_DEFINITIONS.containsKey(name);
     }
@@ -88,6 +84,11 @@ public class ServiceManagerStrategyImpl implements ServiceManagerStrategy
                     ServiceLifecycleController<S, C> serviceLifecycleController, C serviceConfiguration)
         throws ServiceException
     {
+        Objects.requireNonNull(name, "name cannot be null");
+        Objects.requireNonNull(serviceInstanceProvider, "serviceInstanceProvider cannot be null");
+        Objects.requireNonNull(serviceLifecycleController, "serviceLifecycleController cannot be null");
+        Objects.requireNonNull(serviceConfiguration, "serviceConfiguration cannot be null");
+
         this.registerService(name, serviceInstanceProvider, serviceLifecycleController, serviceConfiguration, false);
     }
 
@@ -96,15 +97,10 @@ public class ServiceManagerStrategyImpl implements ServiceManagerStrategy
                     ServiceLifecycleController<S, C> serviceLifecycleController, C serviceConfiguration,
                     boolean override) throws ServiceException
     {
-        if (name == null)
-        {
-            throw new IllegalArgumentException("name cannot be null.");
-        }
-
-        if (serviceInstanceProvider == null)
-        {
-            throw new IllegalArgumentException("serviceProvider cannot be null.");
-        }
+        Objects.requireNonNull(name, "name cannot be null");
+        Objects.requireNonNull(serviceInstanceProvider, "serviceInstanceProvider cannot be null");
+        Objects.requireNonNull(serviceLifecycleController, "serviceLifecycleController cannot be null");
+        Objects.requireNonNull(serviceConfiguration, "serviceConfiguration cannot be null");
 
         if (SERVICE_DEFINITIONS.containsKey(name))
         {
@@ -121,6 +117,10 @@ public class ServiceManagerStrategyImpl implements ServiceManagerStrategy
     registerServiceByControllerOnly(String name, ServiceLifecycleController<S, C> serviceLifecycleController,
                                     C serviceConfiguration)
     {
+        Objects.requireNonNull(name, "name cannot be null");
+        Objects.requireNonNull(serviceLifecycleController, "serviceLifecycleController cannot be null");
+        Objects.requireNonNull(serviceConfiguration, "serviceConfiguration cannot be null");
+
         this.registerServiceByControllerOnly(name, serviceLifecycleController, serviceConfiguration, false);
     }
 
@@ -145,6 +145,10 @@ public class ServiceManagerStrategyImpl implements ServiceManagerStrategy
     registerServiceByControllerOnly(String name, ServiceLifecycleController<S, C> serviceLifecycleController,
                                     C serviceConfiguration, boolean override)
     {
+        Objects.requireNonNull(name, "name cannot be null");
+        Objects.requireNonNull(serviceLifecycleController, "serviceLifecycleController cannot be null");
+        Objects.requireNonNull(serviceConfiguration, "serviceConfiguration cannot be null");
+
         if (this.SERVICE_DEFINITIONS.containsKey(name))
         {
             this.handleServiceOverride(name, override);
@@ -160,6 +164,11 @@ public class ServiceManagerStrategyImpl implements ServiceManagerStrategy
                                        Class<? extends ServiceLifecycleController> serviceLifecycleControllerClass,
                                        ServiceConfiguration serviceConfiguration) throws ServiceException
     {
+        Objects.requireNonNull(name, "name cannot be null");
+        Objects.requireNonNull(serviceClass, "serviceClass cannot be null");
+        Objects.requireNonNull(serviceLifecycleControllerClass, "serviceLifecycleControllerClass cannot be null");
+        Objects.requireNonNull(serviceConfiguration, "serviceConfiguration cannot be null");
+
         this.registerServiceByClass(name, serviceClass, serviceLifecycleControllerClass, serviceConfiguration, false);
     }
 
@@ -186,6 +195,11 @@ public class ServiceManagerStrategyImpl implements ServiceManagerStrategy
                                        ServiceConfiguration serviceConfiguration, boolean override)
         throws ServiceException
     {
+        Objects.requireNonNull(name, "name cannot be null");
+        Objects.requireNonNull(serviceClass, "serviceClass cannot be null");
+        Objects.requireNonNull(serviceLifecycleControllerClass, "serviceLifecycleControllerClass cannot be null");
+        Objects.requireNonNull(serviceConfiguration, "serviceConfiguration cannot be null");
+
         ServiceInstanceProvider serviceProvider = new ServiceInstanceProviderImpl(serviceClass);
         ServiceLifecycleController serviceLifecycleController;
         try
@@ -204,6 +218,10 @@ public class ServiceManagerStrategyImpl implements ServiceManagerStrategy
     public void registerSingletonService(String name, Class<? extends Service> serviceClass,
                                          ServiceConfiguration serviceConfiguration) throws ServiceException
     {
+        Objects.requireNonNull(name, "name cannot be null");
+        Objects.requireNonNull(serviceClass, "serviceClass cannot be null");
+        Objects.requireNonNull(serviceConfiguration, "serviceConfiguration cannot be null");
+
         this.registerSingletonService(name, serviceClass, serviceConfiguration, false);
     }
 
@@ -226,12 +244,18 @@ public class ServiceManagerStrategyImpl implements ServiceManagerStrategy
                                          ServiceConfiguration serviceConfiguration, boolean override)
         throws ServiceException
     {
+        Objects.requireNonNull(name, "name cannot be null");
+        Objects.requireNonNull(serviceClass, "serviceClass cannot be null");
+        Objects.requireNonNull(serviceConfiguration, "serviceConfiguration cannot be null");
+
         this.registerServiceByClass(name, serviceClass, KnownServiceLifecycleControllers.SINGLETON,
                                     serviceConfiguration, override);
     }
 
     private void handleServiceOverride(String name, boolean override)
     {
+        Objects.requireNonNull(name, "name cannot be null");
+
         if (override)
         {
             // This is an override.  Remove defintions.  Shutdown lifecycle controller
@@ -280,6 +304,9 @@ public class ServiceManagerStrategyImpl implements ServiceManagerStrategy
 
         private ServiceDefinition(ServiceLifecycleController<S, C> serviceLifecycleController, C config)
         {
+            Objects.requireNonNull(serviceLifecycleController, "serviceLifecycleController cannot be null");
+            Objects.requireNonNull(config, "config cannot be null");
+
             this.serviceLifecycleController = serviceLifecycleController;
             this.serviceConfiguration = config;
             this.serviceInstanceProvider = null;
@@ -288,6 +315,10 @@ public class ServiceManagerStrategyImpl implements ServiceManagerStrategy
         private ServiceDefinition(ServiceLifecycleController<S, C> serviceLifecycleController,
                                   ServiceInstanceProvider<S> serviceInstanceProvider, C config)
         {
+            Objects.requireNonNull(serviceLifecycleController, "serviceLifecycleController cannot be null");
+            Objects.requireNonNull(serviceInstanceProvider, "serviceInstanceProvider cannot be null");
+            Objects.requireNonNull(config, "config cannot be null");
+
             this.serviceLifecycleController = serviceLifecycleController;
             this.serviceInstanceProvider = serviceInstanceProvider;
             this.serviceConfiguration = config;

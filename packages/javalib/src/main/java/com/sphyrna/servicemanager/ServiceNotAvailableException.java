@@ -1,5 +1,7 @@
 package com.sphyrna.servicemanager;
 
+import java.util.Objects;
+
 /**
  * Thrown when a requested service is not available
  */
@@ -11,12 +13,7 @@ public class ServiceNotAvailableException extends RuntimeException
     {
         super(buildMessage(badServiceName));
 
-        if (badServiceName == null)
-        {
-            throw new IllegalArgumentException("badServiceName cannot be null");
-        }
-
-        this.badServiceName = badServiceName;
+        this.badServiceName = Objects.requireNonNull(badServiceName, "badServiceName cannot be null");
     }
 
     public String getBadServiceName()
@@ -26,10 +23,7 @@ public class ServiceNotAvailableException extends RuntimeException
 
     private static String buildMessage(String badServiceName)
     {
-        if (badServiceName == null)
-        {
-            throw new IllegalArgumentException("badServiceName cannot be null");
-        }
+        Objects.requireNonNull(badServiceName, "badServiceName cannot be null");
 
         StringBuffer messageBuffer = new StringBuffer("A Service with name, ");
         messageBuffer.append(badServiceName);

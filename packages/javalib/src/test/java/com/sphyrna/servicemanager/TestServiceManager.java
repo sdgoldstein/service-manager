@@ -44,6 +44,7 @@ public class TestServiceManager
         verify(mockStrategy).isServiceDefined("someService");
     }
 
+    @Test
     public void testShutdown()
     {
         ServiceManager.setDefaultStrategy(mockStrategy);

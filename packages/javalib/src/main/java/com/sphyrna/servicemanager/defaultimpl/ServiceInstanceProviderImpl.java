@@ -4,6 +4,7 @@ import com.sphyrna.servicemanager.Service;
 import com.sphyrna.servicemanager.ServiceException;
 import com.sphyrna.servicemanager.ServiceInstanceProvider;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
 
 public class ServiceInstanceProviderImpl<S extends Service> implements ServiceInstanceProvider<S>
 {
@@ -12,7 +13,7 @@ public class ServiceInstanceProviderImpl<S extends Service> implements ServiceIn
 
     public ServiceInstanceProviderImpl(Class<S> serviceClass)
     {
-        this.serviceClass = serviceClass;
+        this.serviceClass = Objects.requireNonNull(serviceClass, "serviceClass cannot be null");
     }
 
     @Override

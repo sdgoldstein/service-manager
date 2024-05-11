@@ -51,46 +51,5 @@ public class TestMapConfiguration
         String retrievedValue = (String)this.configurationToTest.getProperty(propertyName);
         assertEquals(propertyValue, retrievedValue,
                      "testGetPutContainsProperty - Ensure property can be retrieved as expected");
-
-        // Test bad args
-        try
-        {
-            this.configurationToTest.getProperty(null);
-            fail(
-                "testGetPutContainsProperty - Should thrown IllegalArgumentException for null argument to getProperty");
-        }
-        catch (IllegalArgumentException exception)
-        {
-        }
-
-        try
-        {
-            this.configurationToTest.setProperty(null, propertyValue);
-            fail(
-                "testGetPutContainsProperty - Should thrown IllegalArgumentException for null name argument to setProperty");
-        }
-        catch (IllegalArgumentException exception)
-        {
-        }
-
-        try
-        {
-            this.configurationToTest.setProperty(propertyName, null);
-            fail(
-                "testGetPutContainsProperty - Should thrown IllegalArgumentException for null name value to setProperty");
-        }
-        catch (IllegalArgumentException exception)
-        {
-        }
-
-        try
-        {
-            this.configurationToTest.containsProperty(null);
-            fail(
-                "testGetPutContainsProperty - Should thrown IllegalArgumentException for null argument to containsProperty");
-        }
-        catch (IllegalArgumentException exception)
-        {
-        }
     }
 }

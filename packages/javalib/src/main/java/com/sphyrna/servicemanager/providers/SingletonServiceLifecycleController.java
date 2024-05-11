@@ -5,6 +5,7 @@ import com.sphyrna.servicemanager.ServiceConfiguration;
 import com.sphyrna.servicemanager.ServiceException;
 import com.sphyrna.servicemanager.ServiceInstanceProvider;
 import com.sphyrna.servicemanager.ServiceLifecycleController;
+import java.util.Objects;
 
 public class SingletonServiceLifecycleController<S extends Service<C>, C extends ServiceConfiguration>
     implements ServiceLifecycleController<S, C>
@@ -16,8 +17,8 @@ public class SingletonServiceLifecycleController<S extends Service<C>, C extends
     @Override
     public void init(ServiceInstanceProvider<S> instanceProvider, C configuration) throws ServiceException
     {
-        this.serviceInstanceProvider = instanceProvider;
-        this.serviceConfiguration = configuration;
+        this.serviceInstanceProvider = Objects.requireNonNull(instanceProvider, "instanceProvider cannot be null");
+        this.serviceConfiguration = Objects.requireNonNull(configuration, "configuration cannot be null");
     }
 
     @Override

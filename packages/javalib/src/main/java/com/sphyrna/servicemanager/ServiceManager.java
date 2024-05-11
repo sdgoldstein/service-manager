@@ -2,6 +2,7 @@ package com.sphyrna.servicemanager;
 
 import com.sphyrna.servicemanager.providers.ConfigServiceManagerStrategy;
 import com.sphyrna.servicemanager.providers.MapConfiguration;
+import java.util.Objects;
 
 /**
  * The ServiceManager is used to manage and retrieve services
@@ -14,6 +15,11 @@ public class ServiceManager
     private static ServiceManagerStrategy serviceManagerStrategy = new ConfigServiceManagerStrategy();
 
     /**
+     * Do not instantiate
+     */
+    private ServiceManager() {}
+
+    /**
      * Retrieve a service
      *
      * @param name
@@ -24,6 +30,8 @@ public class ServiceManager
      */
     public static <S extends Service> S getService(String name) throws ServiceNotAvailableException, ServiceException
     {
+        Objects.requireNonNull(name, "name cannot be null");
+
         return serviceManagerStrategy.getService(name);
     }
 
@@ -40,6 +48,9 @@ public class ServiceManager
     public static <S extends Service<C>, C extends ServiceConfiguration> S getService(String name, C serviceConfig)
         throws ServiceNotAvailableException, ServiceException
     {
+        Objects.requireNonNull(name, "name cannot be null");
+        Objects.requireNonNull(serviceConfig, "serviceConfig cannot be null");
+
         return serviceManagerStrategy.getService(name, serviceConfig);
     }
 
@@ -52,6 +63,8 @@ public class ServiceManager
      */
     public static boolean isServiceDefined(String name)
     {
+        Objects.requireNonNull(name, "name cannot be null");
+
         return serviceManagerStrategy.isServiceDefined(name);
     }
 
@@ -74,6 +87,6 @@ public class ServiceManager
      */
     public static void setDefaultStrategy(ServiceManagerStrategy strategyToSet)
     {
-        serviceManagerStrategy = strategyToSet;
+        serviceManagerStrategy = Objects.requireNonNull(strategyToSet, "strategyToSet cannot be null");
     }
 }
