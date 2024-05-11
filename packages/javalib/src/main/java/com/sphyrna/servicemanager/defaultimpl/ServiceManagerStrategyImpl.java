@@ -27,13 +27,14 @@ public class ServiceManagerStrategyImpl implements ServiceManagerStrategy
         new HashMap<String, ServiceDefinition<?, ?>>();
 
     @Override
-    public <S extends Service> S getService(String name)
+    public <S extends Service> S getService(String name) throws ServiceException
     {
         return this.<S, ServiceConfiguration>getService(name, ServiceManagerConstants.EMPTY_SERVICE_CONFIGURATION);
     }
 
     @Override
     public <S extends Service<C>, C extends ServiceConfiguration> S getService(String name, C serviceConfiguration)
+        throws ServiceException
     {
         if (name == null)
         {
@@ -57,7 +58,7 @@ public class ServiceManagerStrategyImpl implements ServiceManagerStrategy
             // Create and start it
             // FIXME - Not Thread Safe
             ServiceDefinition<S, C> serviceDefinition = (ServiceDefinition<S, C>)SERVICE_DEFINITIONS.get(name);
-            serviceLifecycleController = serviceDefinition.getServiceLifecycleController());
+            serviceLifecycleController = serviceDefinition.getServiceLifecycleController();
 
             if (serviceDefinition.hasServiceInstanceProvider())
             {
@@ -84,6 +85,14 @@ public class ServiceManagerStrategyImpl implements ServiceManagerStrategy
 
     public <S extends Service<C>, C extends ServiceConfiguration> void
     registerService(String name, ServiceInstanceProvider<S> serviceInstanceProvider,
+                    ServiceLifecycleController<S, C> serviceLifecycleController, C serviceConfiguration)
+        throws ServiceException
+    {
+        this.registerService(name, serviceInstanceProvider, serviceLifecycleController, serviceConfiguration, false);
+    }
+
+    public <S extends Service<C>, C extends ServiceConfiguration> void
+    registerService(String name, ServiceInstanceProvider<S> serviceInstanceProvider,
                     ServiceLifecycleController<S, C> serviceLifecycleController, C serviceConfiguration,
                     boolean override) throws ServiceException
     {
@@ -106,6 +115,13 @@ public class ServiceManagerStrategyImpl implements ServiceManagerStrategy
             new ServiceDefinition<S, C>(serviceLifecycleController, serviceInstanceProvider, serviceConfiguration);
 
         this.SERVICE_DEFINITIONS.put(name, serviceDefinition);
+    }
+
+    public <S extends Service<C>, C extends ServiceConfiguration> void
+    registerServiceByControllerOnly(String name, ServiceLifecycleController<S, C> serviceLifecycleController,
+                                    C serviceConfiguration)
+    {
+        this.registerServiceByControllerOnly(name, serviceLifecycleController, serviceConfiguration, false);
     }
 
     /**
@@ -140,6 +156,13 @@ public class ServiceManagerStrategyImpl implements ServiceManagerStrategy
         this.SERVICE_DEFINITIONS.put(name, serviceDefinition);
     }
 
+    public void registerServiceByClass(String name, Class<? extends Service> serviceClass,
+                                       Class<? extends ServiceLifecycleController> serviceLifecycleControllerClass,
+                                       ServiceConfiguration serviceConfiguration) throws ServiceException
+    {
+        this.registerServiceByClass(name, serviceClass, serviceLifecycleControllerClass, serviceConfiguration, false);
+    }
+
     /**
      * Register a service providing a contructor method for a service class and service lifecycle controller class
      *
@@ -158,13 +181,13 @@ public class ServiceManagerStrategyImpl implements ServiceManagerStrategy
      * existing defintion with the same name. If this is false and a service
      * definition already exists, an error will be thrown
      */
-    public <S extends Service<C>, C extends ServiceConfiguration> void
-    registerServiceByClass(String name, Class<? extends Service<C>> serviceClass,
-                           Class<? extends ServiceLifecycleController<S, C>> serviceLifecycleControllerClass,
-                           C serviceConfiguration, boolean override) throws ServiceException
+    public void registerServiceByClass(String name, Class<? extends Service> serviceClass,
+                                       Class<? extends ServiceLifecycleController> serviceLifecycleControllerClass,
+                                       ServiceConfiguration serviceConfiguration, boolean override)
+        throws ServiceException
     {
-        ServiceInstanceProvider<S> serviceProvider = new ServiceInstanceProviderImpl(serviceClass);
-        ServiceLifecycleController<S, C> serviceLifecycleController;
+        ServiceInstanceProvider serviceProvider = new ServiceInstanceProviderImpl(serviceClass);
+        ServiceLifecycleController serviceLifecycleController;
         try
         {
             serviceLifecycleController = serviceLifecycleControllerClass.getDeclaredConstructor().newInstance();
@@ -176,6 +199,12 @@ public class ServiceManagerStrategyImpl implements ServiceManagerStrategy
             throw new ServiceException("Failed to instantiate service lifecycle controller", exception);
         }
         this.registerService(name, serviceProvider, serviceLifecycleController, serviceConfiguration, override);
+    }
+
+    public void registerSingletonService(String name, Class<? extends Service> serviceClass,
+                                         ServiceConfiguration serviceConfiguration) throws ServiceException
+    {
+        this.registerSingletonService(name, serviceClass, serviceConfiguration, false);
     }
 
     /**
@@ -193,9 +222,9 @@ public class ServiceManagerStrategyImpl implements ServiceManagerStrategy
      * existing defintion with the same name. If this is false and a service
      * definition already exists, an error will be thrown
      */
-    public <S extends Service<C>, C extends ServiceConfiguration> void
-    registerSingletonService(String name, Class<? extends Service<C>> serviceClass, C serviceConfiguration,
-                             boolean override) throws ServiceException
+    public void registerSingletonService(String name, Class<? extends Service> serviceClass,
+                                         ServiceConfiguration serviceConfiguration, boolean override)
+        throws ServiceException
     {
         this.registerServiceByClass(name, serviceClass, KnownServiceLifecycleControllers.SINGLETON,
                                     serviceConfiguration, override);

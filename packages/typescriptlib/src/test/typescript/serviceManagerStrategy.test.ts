@@ -195,8 +195,7 @@ describe("DefaultServiceManagerStrategyImpl", () => {
         let serviceTwo = strategyToTest.getService(serviceNameTwo);
         expect(serviceTwo).toBeInstanceOf(MockService);
 
-        // Override a service
-        mockReset(mockServiceLifecycleController);
+        // Override a service=
         strategyToTest.registerSingletonService(serviceNameOne, MockService, testServiceConfiguration, true);
         expect(strategyToTest.isServiceDefined(serviceNameOne)).toStrictEqual(true);
         serviceOne = strategyToTest.getService(serviceNameOne);

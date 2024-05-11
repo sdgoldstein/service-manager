@@ -26,6 +26,11 @@ public class SingletonServiceLifecycleController<S extends Service<C>, C extends
         // FIXME - Not Thread Safe
         if (this.singletonInstance == null)
         {
+            if (this.serviceInstanceProvider == null)
+            {
+                throw new IllegalStateException("Unexpected state. ServiceInstanceProvider not set");
+            }
+
             this.singletonInstance = this.serviceInstanceProvider.createServiceInstance();
             this.singletonInstance.init(this.serviceConfiguration);
             this.singletonInstance.start();

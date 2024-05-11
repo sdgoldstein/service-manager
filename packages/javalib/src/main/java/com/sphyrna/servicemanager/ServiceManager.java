@@ -1,6 +1,7 @@
 package com.sphyrna.servicemanager;
 
 import com.sphyrna.servicemanager.providers.ConfigServiceManagerStrategy;
+import com.sphyrna.servicemanager.providers.MapConfiguration;
 
 /**
  * The ServiceManager is used to manage and retrieve services
@@ -21,10 +22,25 @@ public class ServiceManager
      * @throws ServiceNotAvailableException
      *             if the specified service does not exist
      */
-    public static <S extends Service<C>, C extends ServiceConfiguration> S getService(String name)
-        throws ServiceNotAvailableException, ServiceException
+    public static <S extends Service> S getService(String name) throws ServiceNotAvailableException, ServiceException
     {
         return serviceManagerStrategy.getService(name);
+    }
+
+    /**
+     * Retrieve a service
+     *
+     * @param name
+     *            the name of the service
+     * @param serviceConfig
+     * @return the service associated with the specified name
+     * @throws ServiceNotAvailableException
+     *             if the specified service does not exist
+     */
+    public static <S extends Service<C>, C extends ServiceConfiguration> S getService(String name, C serviceConfig)
+        throws ServiceNotAvailableException, ServiceException
+    {
+        return serviceManagerStrategy.getService(name, serviceConfig);
     }
 
     /**

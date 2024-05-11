@@ -1,10 +1,9 @@
 package com.sphyrna.servicemanager;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-import org.junit.Test;
-
-import com.sphyrna.servicemanager.InvalidServiceDefinitionException;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+    
+import org.junit.jupiter.api.Test;
 
 public class TestInvalidServiceDefinitionException
 {
@@ -12,13 +11,13 @@ public class TestInvalidServiceDefinitionException
     @Test
     public void testInvalidServiceExceptionString()
     {
-        assertNotNull("testInvalidServiceExceptionString - Ensure exception can be created",
-                      new InvalidServiceDefinitionException("message"));
+        assertNotNull(new InvalidServiceDefinitionException("message"),
+                      "testInvalidServiceExceptionString - Ensure exception can be created");
 
         // Test IllegalArgumentException for null value
         try
         {
-            new InvalidServiceDefinitionException((String) null);
+            new InvalidServiceDefinitionException((String)null);
             fail("testInvalidServiceExceptionString - Specifying a null argument should lead to ILE");
         }
         catch (IllegalArgumentException exception)
@@ -29,9 +28,8 @@ public class TestInvalidServiceDefinitionException
     @Test
     public void testInvalidServiceExceptionStringThrowable()
     {
-        assertNotNull("testInvalidServiceExceptionStringThrowable - Ensure exception can be created",
-                      new InvalidServiceDefinitionException("message",
-                                                            new Throwable()));
+        assertNotNull(new InvalidServiceDefinitionException("message", new Throwable()),
+                      "testInvalidServiceExceptionStringThrowable - Ensure exception can be created");
 
         // Test IllegalArgumentException for null value
         try
@@ -56,13 +54,13 @@ public class TestInvalidServiceDefinitionException
     @Test
     public void testInvalidServiceExceptionThrowable()
     {
-        assertNotNull("testInvalidServiceExceptionThrowable - Ensure exception can be created",
-                      new InvalidServiceDefinitionException(new Throwable()));
+        assertNotNull(new InvalidServiceDefinitionException(new Throwable()),
+                      "testInvalidServiceExceptionThrowable - Ensure exception can be created");
 
         // Test IllegalArgumentException for null value
         try
         {
-            new InvalidServiceDefinitionException((Throwable) null);
+            new InvalidServiceDefinitionException((Throwable)null);
             fail("testInvalidServiceExceptionThrowable - Specifying a null throwable");
         }
         catch (IllegalArgumentException exception)

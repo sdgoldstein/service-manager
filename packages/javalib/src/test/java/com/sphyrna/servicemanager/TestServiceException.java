@@ -1,9 +1,10 @@
 package com.sphyrna.servicemanager;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import com.sphyrna.servicemanager.ServiceException;
+import org.junit.jupiter.api.Test;
 
 public class TestServiceException
 {
@@ -11,9 +12,7 @@ public class TestServiceException
     @Test
     public void testServiceExceptionString()
     {
-        assertNotNull(
-                      "testServiceExceptionString - Ensure exception can be created",
-                      new ServiceException("message"));
+        assertNotNull(new ServiceException("message"), "testServiceExceptionString - Ensure exception can be created");
 
         // Test IllegalArgumentException for null value
         try
@@ -29,9 +28,8 @@ public class TestServiceException
     @Test
     public void testServiceExceptionStringThrowable()
     {
-        assertNotNull(
-                      "testServiceExceptionStringThrowable - Ensure exception can be created",
-                      new ServiceException("message", new Throwable()));
+        assertNotNull(new ServiceException("message", new Throwable()),
+                      "testServiceExceptionStringThrowable - Ensure exception can be created");
 
         // Test IllegalArgumentException for null value
         try
@@ -42,7 +40,7 @@ public class TestServiceException
         catch (IllegalArgumentException exception)
         {
         }
-        
+
         try
         {
             new ServiceException("message", null);
@@ -54,10 +52,11 @@ public class TestServiceException
     }
 
     @Test
-    public void testServiceExceptionThrowable()  {
+    public void testServiceExceptionThrowable()
+    {
         assertNotNull(
-                      "testServiceExceptionThrowable - Ensure exception can be created",
-                      new ServiceException(new Throwable()));
+
+            new ServiceException(new Throwable()), "testServiceExceptionThrowable - Ensure exception can be created");
 
         // Test IllegalArgumentException for null value
         try
@@ -69,5 +68,4 @@ public class TestServiceException
         {
         }
     }
-
 }

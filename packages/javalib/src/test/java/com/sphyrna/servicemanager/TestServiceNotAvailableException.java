@@ -1,9 +1,10 @@
 package com.sphyrna.servicemanager;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import com.sphyrna.servicemanager.ServiceNotAvailableException;
+import org.junit.jupiter.api.Test;
 
 public class TestServiceNotAvailableException
 {
@@ -11,9 +12,8 @@ public class TestServiceNotAvailableException
     @Test
     public void testServiceNotAvailableException()
     {
-        assertNotNull(
-                      "testServiceNotAvailableException - Ensure exception can be created",
-                      new ServiceNotAvailableException("BadService"));
+        assertNotNull(new ServiceNotAvailableException("BadService"),
+                      "testServiceNotAvailableException - Ensure exception can be created");
 
         // Test IllegalArgumentException for null value
         try
@@ -25,5 +25,4 @@ public class TestServiceNotAvailableException
         {
         }
     }
-
 }

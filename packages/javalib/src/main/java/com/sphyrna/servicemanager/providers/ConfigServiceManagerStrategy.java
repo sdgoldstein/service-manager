@@ -4,19 +4,18 @@ import com.sphyrna.servicemanager.Service;
 import com.sphyrna.servicemanager.ServiceConfiguration;
 import com.sphyrna.servicemanager.ServiceManagerStrategy;
 
-public class ConfigServiceManagerStrategy<S extends Service<C>, C extends ServiceConfiguration>
-    implements ServiceManagerStrategy<S, C>
+public class ConfigServiceManagerStrategy implements ServiceManagerStrategy
 {
 
     @Override
-    public S getService(String name)
+    public <S extends Service> S getService(String name)
     {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getService'");
     }
 
     @Override
-    public S getService(String name, ServiceConfiguration serviceConfiguration)
+    public <S extends Service<C>, C extends ServiceConfiguration> S getService(String name, C serviceConfiguration)
     {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getService'");

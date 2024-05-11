@@ -1,19 +1,19 @@
 package com.sphyrna.servicemanager;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import com.sphyrna.servicemanager.providers.MapConfiguration;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class TestMapConfiguration
 {
     private MapConfiguration configurationToTest;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception
     {
         this.configurationToTest = new MapConfiguration();
@@ -33,8 +33,8 @@ public class TestMapConfiguration
         String propertyValue = "propValue";
 
         // First ensure state when property does not exists
-        assertFalse("testGetPutContainsProperty - Ensure property does not exist",
-                    this.configurationToTest.containsProperty(propertyName));
+        assertFalse(this.configurationToTest.containsProperty(propertyName),
+                    "testGetPutContainsProperty - Ensure property does not exist");
         try
         {
             this.configurationToTest.getProperty(propertyName);
@@ -45,12 +45,12 @@ public class TestMapConfiguration
         }
 
         // Now, put a property in
-        this.configurationToTest.putProperty(propertyName, propertyValue);
-        assertTrue("testGetPutContainsProperty - Ensure property does exists after adding",
-                   this.configurationToTest.containsProperty(propertyName));
+        this.configurationToTest.setProperty(propertyName, propertyValue);
+        assertTrue(this.configurationToTest.containsProperty(propertyName),
+                   "testGetPutContainsProperty - Ensure property does exists after adding");
         String retrievedValue = (String)this.configurationToTest.getProperty(propertyName);
-        assertEquals("testGetPutContainsProperty - Ensure property can be retrieved as expected", propertyValue,
-                     retrievedValue);
+        assertEquals(propertyValue, retrievedValue,
+                     "testGetPutContainsProperty - Ensure property can be retrieved as expected");
 
         // Test bad args
         try
@@ -65,9 +65,9 @@ public class TestMapConfiguration
 
         try
         {
-            this.configurationToTest.putProperty(null, propertyValue);
+            this.configurationToTest.setProperty(null, propertyValue);
             fail(
-                "testGetPutContainsProperty - Should thrown IllegalArgumentException for null name argument to putProperty");
+                "testGetPutContainsProperty - Should thrown IllegalArgumentException for null name argument to setProperty");
         }
         catch (IllegalArgumentException exception)
         {
@@ -75,9 +75,9 @@ public class TestMapConfiguration
 
         try
         {
-            this.configurationToTest.putProperty(propertyName, null);
+            this.configurationToTest.setProperty(propertyName, null);
             fail(
-                "testGetPutContainsProperty - Should thrown IllegalArgumentException for null name value to putProperty");
+                "testGetPutContainsProperty - Should thrown IllegalArgumentException for null name value to setProperty");
         }
         catch (IllegalArgumentException exception)
         {

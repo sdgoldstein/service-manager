@@ -4,14 +4,14 @@ package com.sphyrna.servicemanager;
  * A Service is a predefined component of functionality with a lifecycle
  * managed by the ServiceManger framework.
  */
-public interface Service<T extends ServiceConfiguration>
+public interface Service<C extends ServiceConfiguration>
 {
     /**
      * Initializes the service instance
      *
      * @param configuration Service level configuration
      */
-    void init(T configuration);
+    void init(C configuration);
 
     /**
      * Starts the service instances
