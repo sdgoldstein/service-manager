@@ -26,11 +26,11 @@ public class ServiceManagerStrategyImpl implements ServiceManagerStrategy
         new HashMap<String, ServiceDefinition<?, ?>>();
 
     @Override
-    public <S extends Service> S getService(String name) throws ServiceException
+    public <S extends Service<ServiceConfiguration>> S getService(String name) throws ServiceException
     {
         Objects.requireNonNull(name, "name cannot be null");
 
-        return this.<S, ServiceConfiguration>getService(name, ServiceManagerConstants.EMPTY_SERVICE_CONFIGURATION);
+        return this.getService(name, ServiceManagerConstants.EMPTY_SERVICE_CONFIGURATION);
     }
 
     @Override

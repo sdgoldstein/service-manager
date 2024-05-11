@@ -11,7 +11,7 @@ public interface ServiceManagerStrategy
      * @param name the name of the service
      * @return the requested service if exists
      */
-    public <S extends Service> S getService(String name) throws ServiceException;
+    public <S extends Service<ServiceConfiguration>> S getService(String name) throws ServiceException;
 
     /**
      * Retrieve a service

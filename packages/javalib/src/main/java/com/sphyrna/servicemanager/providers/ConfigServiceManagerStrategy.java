@@ -8,7 +8,7 @@ public class ConfigServiceManagerStrategy implements ServiceManagerStrategy
 {
 
     @Override
-    public <S extends Service> S getService(String name)
+    public <S extends Service<ServiceConfiguration>> S getService(String name)
     {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getService'");

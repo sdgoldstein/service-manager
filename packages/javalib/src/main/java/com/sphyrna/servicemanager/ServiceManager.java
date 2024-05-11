@@ -28,7 +28,8 @@ public class ServiceManager
      * @throws ServiceNotAvailableException
      *             if the specified service does not exist
      */
-    public static <S extends Service> S getService(String name) throws ServiceNotAvailableException, ServiceException
+    public static <S extends Service<ServiceConfiguration>> S getService(String name)
+        throws ServiceNotAvailableException, ServiceException
     {
         Objects.requireNonNull(name, "name cannot be null");
 
