@@ -1,8 +1,8 @@
 # Service Manager Framework
 
-The Service Manager Framework is a versatile API designed to enable the process of creating, instantiating, and managing services.  A service is an independent layer of functionality that is provided through an API interface.  This framework provides a foundation for dependency injection and lifecycle management of services, enabling developers to build modular, maintainable, and scalable applications. 
+The Service Manager Framework provides an API to enable dependency injection and lifecycle management of services, enabling developers to build modular and maintainable applications with less boilerplate code. A service is defined as an configurable, independent layer of functionality that is provided through an API interface.  
 
-Three programming languages are supported: Java, TypeScript, and Python, making it accessible to a wide range of projects.
+To make the framework accessible to a wide range of projects, it's available in three programming languages: Java, TypeScript, and Python.
 
 ## Getting Started
 
