@@ -1,3 +1,0 @@
-1.  Decouple Service Control and Service interface.  This way, clients don't call service lifecycle methods directly
-2.  Create a Dependency mechanism
-3.  Create a means by which to configure a service through a property file
