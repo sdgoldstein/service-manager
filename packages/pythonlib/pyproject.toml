@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "sphyrna-service-manager"
-version = "0.3.6"
+version = "0.3.7"
 description = "Python implementation of a service manager framework"
 authors = ["Scott Goldstein <sgoldstein@apache.org>"]
 readme = "README.md"
