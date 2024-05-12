@@ -11,5 +11,3 @@ The only exception to this behavior is for the lifecycle task, "deploy".  The de
 To perform a release, run the following two commands:
 mvn release:prepare
 mvn release:perform
-
-FIX ME - package.json and pyproject.toml my be checked into git during prepare phase above
