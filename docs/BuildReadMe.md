@@ -5,7 +5,11 @@ The system level build tool being used is Maven.  There's a pom.xml at the root 
 
 From within each package directly, a build can be performed using either maven or the language specific build tool.  The results should be the same.
 
-The only exception to this behavior is for the lifecycle task, "deploy".
+The only exception to this behavior is for the lifecycle task, "deploy".  The deploy logic only exists in the pom.xml files
 
-## Deploy
-In order to maintain consistent version numbers and tagging in the Git repository, all publishing is handled at the root level.  Each time a public is performed, ALL libraries are published to the appropriate public library repositories
+## Performing a Release
+To perform a release, run the following two commands:
+mvn release:prepare
+mvn release:perform
+
+FIX ME - package.json and pyproject.toml my be checked into git during prepare phase above
