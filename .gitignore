@@ -4,3 +4,7 @@
 .npmignore
 **/dist
 **/target
+
+### VisualStudioCode ###
+.vscode/**/*
+
