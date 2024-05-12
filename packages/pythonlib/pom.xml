@@ -136,7 +136,7 @@
 
     <profiles>
         <profile>
-            <id>release</id>
+            <id>release_prepare</id>
             <build>
                 <pluginManagement>
                     <plugins>
@@ -173,6 +173,22 @@
                                         </arguments>
                                     </configuration>
                                 </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+        <profile>
+            <id>release_perform</id>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.codehaus.mojo</groupId>
+                            <artifactId>exec-maven-plugin</artifactId>
+                            <version>3.1.1</version>
+                            <executions>
                                 <execution>
                                     <id>deploy_with_poetry</id>
                                     <phase>deploy</phase>

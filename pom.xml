@@ -32,8 +32,8 @@
                 <configuration>
                     <goals>deploy</goals>
                     <tagNameFormat>@{project.version}</tagNameFormat>
-                    <preparationProfiles>release</preparationProfiles>
-                    <releaseProfiles>release</releaseProfiles>
+                    <preparationProfiles>release_prepare</preparationProfiles>
+                    <releaseProfiles>release_perform</releaseProfiles>
                 </configuration>
             </plugin>
             <plugin>
