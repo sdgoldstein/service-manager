@@ -1,6 +1,6 @@
 {
   "name": "@sphyrna/service-manager-ts",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Typescript implementation of a service manager framework",
   "type": "module",
   "exports": {

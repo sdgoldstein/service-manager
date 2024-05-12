@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>sphyrna</groupId>
@@ -45,57 +47,6 @@
                 <configuration>
                     <skip>true</skip>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.1.1</version>
-                <executions>
-                    <execution>
-                        <id>deploy-typescript</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>npm</executable>
-                            <workingDirectory>packages/typescriptlib</workingDirectory>
-                            <arguments>
-                                <argument>publish</argument>
-                                <argument>dry-run</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>deploy-python</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>poetry</executable>
-                            <workingDirectory>packages/pythonlib</workingDirectory>
-                            <arguments>
-                                <argument>publish</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <!-- FIXME - We don't currently have a place to publish Java Library
-                        <execution>
-                        <id>deploy-java</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>poetry</executable>
-                            <workingDirectory>packages/javalib</workingDirectory>
-                            <arguments>
-                                <argument>publish</argument>
-                            </arguments>
-                        </configuration>
-                    </execution> -->
-                </executions>
             </plugin>
         </plugins>
     </build>
