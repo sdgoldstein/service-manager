@@ -54,7 +54,7 @@
                 <version>3.1.1</version>
                 <executions>
                     <execution>
-                        <id>deploy</id>
+                        <id>deploy-typescript</id>
                         <phase>deploy</phase>
                         <goals>
                             <goal>exec</goal>
@@ -68,6 +68,35 @@
                             </arguments>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>deploy-python</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>poetry</executable>
+                            <workingDirectory>packages/pythonlib</workingDirectory>
+                            <arguments>
+                                <argument>publish</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <!-- FIXME - We don't currently have a place to publish Java Library
+                        <execution>
+                        <id>deploy-java</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>poetry</executable>
+                            <workingDirectory>packages/javalib</workingDirectory>
+                            <arguments>
+                                <argument>publish</argument>
+                            </arguments>
+                        </configuration>
+                    </execution> -->
                 </executions>
             </plugin>
         </plugins>
