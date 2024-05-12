@@ -8,3 +8,5 @@
 ### VisualStudioCode ###
 .vscode/**/*
 
+### Design ###
+design/**/* 
